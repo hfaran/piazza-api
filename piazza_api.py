@@ -1,9 +1,8 @@
 """Inspired by: https://gist.github.com/alexjlockwood/6797443"""
 
-import urllib2
+import requests
 import json
 import getpass
-from cookielib import CookieJar
 
 
 class AuthenticationError(Exception):
@@ -34,15 +33,12 @@ class PiazzaAPI(object):
         :type  email: str
         "param email: Email address with which to authenticate (log in) with
         """
-        self._cj = CookieJar()
-        self._opener = urllib2.build_opener(
-            urllib2.HTTPCookieProcessor(self._cj))
-
-        if not email:
-            email = raw_input("Email: ")
-        password = getpass.getpass()
-        self._authenticate(email, password)
         self._nid = network_id
+        self.base_api_url = 'https://piazza.com/logic/api'
+
+        email = email if email else raw_input("Email: ")
+        password = getpass.getpass()
+        self.cookies = self._authenticate(email, password)
 
     def _authenticate(self, email, password):
         """Login with email, password and get back a session cookie
@@ -52,16 +48,27 @@ class PiazzaAPI(object):
         :type  password: str
         :param password: The password used for authentication
         """
-        login_url = 'https://piazza.com/logic/api?method=user.login'
-        login_data = ('{{"method":"user.login","params":{{"email":"{}",'
-                      '"pass":"{}"}}}}'.format(email, password))
+        login_url = self.base_api_url
+        login_data = {
+            "method": "user.login",
+            "params": {
+                "email": email,
+                "pass": password
+            }
+        }
+        login_params = {"method": "user.login"}
         # If the user/password match, the server respond will contain a
         #  session cookie that you can use to authenticate future requests.
-        login_resp = json.loads(
-            self._opener.open(login_url, login_data).read())
-        if login_resp["result"] != "OK":
+        r = requests.post(
+            login_url,
+            data=json.dumps(login_data),
+            params=login_params
+        )
+        if r.json()["result"] not in ["OK"]:
             raise AuthenticationError(
-                "Could not authenticate.\n{}".format(login_resp))
+                "Could not authenticate.\n{}".format(r.json())
+            )
+        return r.cookies
 
     def get(self, cid, nid=None):
         """Get data from post `cid` in network `nid`
@@ -74,9 +81,19 @@ class PiazzaAPI(object):
         :param cid: This is the post ID which we grab
         :returns: Python object containing returned data
         """
-        if not nid:
-            nid = self._nid
-        content_url = 'https://piazza.com/logic/api?method=get.content'
-        content_data = ('{{"method":"content.get","params":{{"cid":"{}",'
-                        '"nid":"{}"}}}}'.format(cid, nid))
-        return json.loads(self._opener.open(content_url, content_data).read())
+        nid = nid if nid else self._nid
+        content_url = self.base_api_url
+        content_params = {"method": "get.content"}
+        content_data = {
+            "method": "content.get",
+            "params": {
+                "cid": cid,
+                "nid": nid
+            }
+        }
+        return requests.post(
+            content_url,
+            data=json.dumps(content_data),
+            params=content_params,
+            cookies=self.cookies
+        ).json()
