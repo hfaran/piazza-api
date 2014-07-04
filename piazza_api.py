@@ -1,13 +1,14 @@
-"""Inspired by: https://gist.github.com/alexjlockwood/6797443"""
-
 import requests
 import json
 import getpass
 
 
 class AuthenticationError(Exception):
-
     """AuthenticationError"""
+
+
+class NotAuthenticatedError(Exception):
+    """NotAuthenticatedError"""
 
 
 class PiazzaAPI(object):
@@ -16,13 +17,14 @@ class PiazzaAPI(object):
 
     Example:
         >>> p = PiazzaAPI("hl5qm84dl4t3x2")
+        >>> p.user_auth()
         Email: ...
         Password: ...
         >>> p.get(181)
         ...
     """
 
-    def __init__(self, network_id, email=None):
+    def __init__(self, network_id):
         """
         - Get user's password
         - Authenticate with Piazza and get session cookie
@@ -35,12 +37,9 @@ class PiazzaAPI(object):
         """
         self._nid = network_id
         self.base_api_url = 'https://piazza.com/logic/api'
+        self.cookies = None
 
-        email = email if email else raw_input("Email: ")
-        password = getpass.getpass()
-        self.cookies = self._authenticate(email, password)
-
-    def _authenticate(self, email, password):
+    def user_auth(self, email=None, password=None):
         """Login with email, password and get back a session cookie
 
         :type  email: str
@@ -48,6 +47,9 @@ class PiazzaAPI(object):
         :type  password: str
         :param password: The password used for authentication
         """
+        email = raw_input("Email: ") if email is None else email
+        password = getpass.getpass() if password is None else password
+
         login_url = self.base_api_url
         login_data = {
             "method": "user.login",
@@ -68,7 +70,27 @@ class PiazzaAPI(object):
             raise AuthenticationError(
                 "Could not authenticate.\n{}".format(r.json())
             )
-        return r.cookies
+        self.cookies = r.cookies
+
+    def demo_auth(self, auth=None, url=None):
+        """Authenticate with a "Share Your Class" URL using a demo user.
+
+        You may provide either the entire ``url`` or simply the ``auth`` parameter.
+
+        :param url: Example - "https://piazza.com/demo_login?nid=hbj11a1gcvl1s6&auth=06c111b"
+        :param auth: Example - "06c111b"
+        """
+        assert all([
+            auth or url,  # Must provide at least one
+            not (auth and url)  # Cannot provide more than one
+        ])
+        if url is None:
+            url = "https://piazza.com/demo_login"
+            params = dict(nid=self._nid, auth=auth)
+            res = requests.get(url, params=params)
+        else:
+            res = requests.get(url)
+        self.cookies = res.cookies
 
     def get(self, cid, nid=None):
         """Get data from post `cid` in network `nid`
@@ -81,6 +103,9 @@ class PiazzaAPI(object):
         :param cid: This is the post ID which we grab
         :returns: Python object containing returned data
         """
+        if self.cookies is None:
+            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+
         nid = nid if nid else self._nid
         content_url = self.base_api_url
         content_params = {"method": "get.content"}
