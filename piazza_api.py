@@ -13,7 +13,7 @@ class NotAuthenticatedError(Exception):
 
 class PiazzaAPI(object):
 
-    """Tiny wrapper around Piazza's Internal REST API
+    """Tiny wrapper around Piazza's Internal API
 
     Example:
         >>> p = PiazzaAPI("hl5qm84dl4t3x2")
