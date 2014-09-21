@@ -12,7 +12,6 @@ class NotAuthenticatedError(Exception):
 
 
 class PiazzaAPI(object):
-
     """Tiny wrapper around Piazza's Internal API
 
     Example:
@@ -22,19 +21,12 @@ class PiazzaAPI(object):
         Password: ...
         >>> p.get(181)
         ...
+        
+    :type  network_id: str
+    :param network_id: This is the ID of the network (or class) from which
+        to query posts
     """
-
     def __init__(self, network_id):
-        """
-        - Get user's password
-        - Authenticate with Piazza and get session cookie
-
-        :type  network_id: str
-        :param network_id: This is the ID of the network (or class) from which
-            to query posts
-        :type  email: str
-        "param email: Email address with which to authenticate (log in) with
-        """
         self._nid = network_id
         self.base_api_url = 'https://piazza.com/logic/api'
         self.cookies = None
