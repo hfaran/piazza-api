@@ -114,3 +114,38 @@ class PiazzaAPI(object):
             params=content_params,
             cookies=self.cookies
         ).json()
+
+    def enroll_students(self, student_emails, nid=None):
+        """Enroll students in a network `nid`
+
+        :type  student_emails: list of str
+        :param student_emails: A listing of email addresses to enroll
+            in the network (or class). This can be a list of length one.
+        :type  nid: str
+        :param nid: This is the ID of the network to add students
+            to. This is optional and only to override the existing
+            `network_id` entered when created the class
+        """
+        if self.cookies is None:
+            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+
+        nid = nid if nid else self._nid
+
+        content_url = self.base_api_url
+        content_params = {"method": "network.update"}
+        content_data = {
+            "method": "network.update",
+            "params": {
+                "id": nid,
+                "from": "ClassSettingsPage",
+                "add_students": json.dumps(student_emails)
+            }
+        }
+
+        return requests.post(
+            content_url,
+            data=json.dumps(content_data),
+            params=content_params,
+            cookies=self.cookies
+        ).json()
+
