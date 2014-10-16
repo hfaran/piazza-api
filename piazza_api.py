@@ -119,7 +119,8 @@ class PiazzaAPI(object):
         """Enroll students in a network `nid`
 
         :type  student_emails: list of str
-        :param student_emails: A listing of email addresses to enroll in the network (or class)
+        :param student_emails: A listing of email addresses to enroll
+            in the network (or class). This can be a list of length one.
         :type  nid: str
         :param nid: This is the ID of the network to add students
             to. This is optional and only to override the existing
