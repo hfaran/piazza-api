@@ -184,3 +184,43 @@ class PiazzaAPI(object):
         else:
             return r.get(u'result')
 
+    def remove_users(self, user_ids, nid=None):
+        """Remove users from a network `nid`
+
+        :type  user_ids: list of str
+        :param user_ids: a list of user ids. These are the same
+            ids that are returned by get_all_users.
+        :type  nid: str
+        :param nid: This is the ID of the network to add students
+            to. This is optional and only to override the existing
+            `network_id` entered when created the class
+        :returns: Python object containing returned data, a list
+            of dicts of user data of all of the users remaining in
+            the network after users are removed.
+        """
+        if self.cookies is None:
+            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+
+        nid = nid if nid else self._nid
+
+        content_url = self.base_api_url
+        content_params = {"method": "network.update"}
+        content_data = {
+           "method": "network.update",
+           "params": {
+                "id": nid,
+                "remove_users": user_ids
+           }
+        }
+
+        r = requests.post(
+            content_url,
+            data=json.dumps(content_data),
+            params=content_params,
+            cookies=self.cookies
+        ).json()
+
+        if r.get(u'error'):
+            raise Exception("Could not remove users.\n{}".format(r))
+        else:
+            return r.get(u'result')
