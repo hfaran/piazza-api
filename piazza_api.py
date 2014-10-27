@@ -149,3 +149,38 @@ class PiazzaAPI(object):
             cookies=self.cookies
         ).json()
 
+    def get_all_users(self, nid=None):
+        """Get a listing of each user in a network `nid`
+
+        :type  nid: str
+        :param nid: This is the ID of the network to add students
+            to. This is optional and only to override the existing
+            `network_id` entered when created the class
+        :returns: Python object containing returned data
+        """
+        if self.cookies is None:
+            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+
+        nid = nid if nid else self._nid
+
+        content_url = self.base_api_url
+        content_params = {"method": "network.get_all_users"}
+        content_data = {
+           "method": "network.get_all_users",
+           "params": {
+                "nid": nid
+           }
+        }
+
+        r = requests.post(
+            content_url,
+            data=json.dumps(content_data),
+            params=content_params,
+            cookies=self.cookies
+        ).json()
+
+        if r.get(u'error'):
+            raise Exception("Could not get users.\n{}".format(r))
+        else:
+            return r.get(u'result')
+
