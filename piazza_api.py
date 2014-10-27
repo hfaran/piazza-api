@@ -21,7 +21,7 @@ class PiazzaAPI(object):
         Password: ...
         >>> p.get(181)
         ...
-        
+
     :type  network_id: str
     :param network_id: This is the ID of the network (or class) from which
         to query posts
@@ -116,7 +116,11 @@ class PiazzaAPI(object):
         ).json()
 
     def enroll_students(self, student_emails, nid=None):
-        """Enroll students in a network `nid`
+        """Enroll students in a network `nid`.
+
+        Piazza will email these students with instructions to
+        activate their account.
+
 
         :type  student_emails: list of str
         :param student_emails: A listing of email addresses to enroll
@@ -125,6 +129,9 @@ class PiazzaAPI(object):
         :param nid: This is the ID of the network to add students
             to. This is optional and only to override the existing
             `network_id` entered when created the class
+        :returns: Python object containing returned data, a list
+            of dicts of user data of all of the users in the network
+            including the ones that were just added.
         """
         if self.cookies is None:
             raise NotAuthenticatedError("You must authenticate before making any other requests.")
@@ -138,14 +145,95 @@ class PiazzaAPI(object):
             "params": {
                 "id": nid,
                 "from": "ClassSettingsPage",
-                "add_students": json.dumps(student_emails)
+                "add_students": student_emails
             }
         }
 
-        return requests.post(
+        r = requests.post(
             content_url,
             data=json.dumps(content_data),
             params=content_params,
             cookies=self.cookies
         ).json()
 
+        if r.get(u'error'):
+            raise Exception("Could not add users.\n{}".format(r))
+        else:
+            return r.get(u'result')
+
+    def get_all_users(self, nid=None):
+        """Get a listing of data for each user in a network `nid`
+
+        :type  nid: str
+        :param nid: This is the ID of the network to add students
+            to. This is optional and only to override the existing
+            `network_id` entered when created the class
+        :returns: Python object containing returned data, a list
+            of dicts containing user data.
+        """
+        if self.cookies is None:
+            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+
+        nid = nid if nid else self._nid
+
+        content_url = self.base_api_url
+        content_params = {"method": "network.get_all_users"}
+        content_data = {
+           "method": "network.get_all_users",
+           "params": {
+                "nid": nid
+           }
+        }
+
+        r = requests.post(
+            content_url,
+            data=json.dumps(content_data),
+            params=content_params,
+            cookies=self.cookies
+        ).json()
+
+        if r.get(u'error'):
+            raise Exception("Could not get users.\n{}".format(r))
+        else:
+            return r.get(u'result')
+
+    def remove_users(self, user_ids, nid=None):
+        """Remove users from a network `nid`
+
+        :type  user_ids: list of str
+        :param user_ids: a list of user ids. These are the same
+            ids that are returned by get_all_users.
+        :type  nid: str
+        :param nid: This is the ID of the network to add students
+            to. This is optional and only to override the existing
+            `network_id` entered when created the class
+        :returns: Python object containing returned data, a list
+            of dicts of user data of all of the users remaining in
+            the network after users are removed.
+        """
+        if self.cookies is None:
+            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+
+        nid = nid if nid else self._nid
+
+        content_url = self.base_api_url
+        content_params = {"method": "network.update"}
+        content_data = {
+           "method": "network.update",
+           "params": {
+                "id": nid,
+                "remove_users": user_ids
+           }
+        }
+
+        r = requests.post(
+            content_url,
+            data=json.dumps(content_data),
+            params=content_params,
+            cookies=self.cookies
+        ).json()
+
+        if r.get(u'error'):
+            raise Exception("Could not remove users.\n{}".format(r))
+        else:
+            return r.get(u'result')
