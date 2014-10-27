@@ -21,7 +21,7 @@ class PiazzaAPI(object):
         Password: ...
         >>> p.get(181)
         ...
-        
+
     :type  network_id: str
     :param network_id: This is the ID of the network (or class) from which
         to query posts
@@ -116,7 +116,11 @@ class PiazzaAPI(object):
         ).json()
 
     def enroll_students(self, student_emails, nid=None):
-        """Enroll students in a network `nid`
+        """Enroll students in a network `nid`.
+
+        Piazza will email these students with instructions to
+        activate their account.
+
 
         :type  student_emails: list of str
         :param student_emails: A listing of email addresses to enroll
@@ -125,6 +129,9 @@ class PiazzaAPI(object):
         :param nid: This is the ID of the network to add students
             to. This is optional and only to override the existing
             `network_id` entered when created the class
+        :returns: Python object containing returned data, a list
+            of dicts of user data of all of the users in the network
+            including the ones that were just added.
         """
         if self.cookies is None:
             raise NotAuthenticatedError("You must authenticate before making any other requests.")
@@ -142,21 +149,27 @@ class PiazzaAPI(object):
             }
         }
 
-        return requests.post(
+        r = requests.post(
             content_url,
             data=json.dumps(content_data),
             params=content_params,
             cookies=self.cookies
         ).json()
 
+        if r.get(u'error'):
+            raise Exception("Could not add users.\n{}".format(r))
+        else:
+            return r.get(u'result')
+
     def get_all_users(self, nid=None):
-        """Get a listing of each user in a network `nid`
+        """Get a listing of data for each user in a network `nid`
 
         :type  nid: str
         :param nid: This is the ID of the network to add students
             to. This is optional and only to override the existing
             `network_id` entered when created the class
-        :returns: Python object containing returned data
+        :returns: Python object containing returned data, a list
+            of dicts containing user data.
         """
         if self.cookies is None:
             raise NotAuthenticatedError("You must authenticate before making any other requests.")
