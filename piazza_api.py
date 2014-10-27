@@ -145,7 +145,7 @@ class PiazzaAPI(object):
             "params": {
                 "id": nid,
                 "from": "ClassSettingsPage",
-                "add_students": json.dumps(student_emails)
+                "add_students": student_emails
             }
         }
 
