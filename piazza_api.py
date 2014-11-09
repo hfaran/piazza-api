@@ -228,6 +228,7 @@ class PiazzaAPI(object):
             the request should be made. This is optional and only to
             override the existing `network_id` entered when creating the
             class
+        :returns: Python object containing "Class at a Glance" stats
         """
         self._check_authenticated()
 
