@@ -145,8 +145,8 @@ class PiazzaAPI(object):
         """Get a listing of data for each user in a network `nid`
 
         :type  nid: str
-        :param nid: This is the ID of the network to add students
-            to. This is optional and only to override the existing
+        :param nid: This is the ID of the network to get users
+            from. This is optional and only to override the existing
             `network_id` entered when created the class
         :returns: Python object containing returned data, a list
             of dicts containing user data.
@@ -171,8 +171,8 @@ class PiazzaAPI(object):
         :param user_ids: a list of user ids. These are the same
             ids that are returned by get_all_users.
         :type  nid: str
-        :param nid: This is the ID of the network to add students
-            to. This is optional and only to override the existing
+        :param nid: This is the ID of the network to get students 
+            from. This is optional and only to override the existing
             `network_id` entered when created the class
         :returns: Python object containing returned data, a list
             of dicts containing user data.
@@ -197,8 +197,8 @@ class PiazzaAPI(object):
         :param user_ids: a list of user ids. These are the same
             ids that are returned by get_all_users.
         :type  nid: str
-        :param nid: This is the ID of the network to add students
-            to. This is optional and only to override the existing
+        :param nid: This is the ID of the network to remove students 
+            from. This is optional and only to override the existing
             `network_id` entered when created the class
         :returns: Python object containing returned data, a list
             of dicts of user data of all of the users remaining in
