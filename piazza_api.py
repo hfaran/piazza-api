@@ -209,6 +209,30 @@ class PiazzaAPI(object):
         else:
             return r.get(u'result')
 
+    def get_instructor_stats(self, nid=None):
+        """Gets "Class at a Glance" stats visible to Instructors, like
+        unanswered question count and number of total contributions.
+        Requires currently authenticated user to be an Instructor.
+
+        :type  nid: str
+        :param nid: This is the ID of the network to which the request
+            the request should be made. This is optional and only to
+            override the existing `network_id` entered when creating the
+            class
+        :returns: Python object containing "Class at a Glance" stats
+        """
+        self._check_authenticated()
+
+        r = self.request(
+            method="network.get_instructor_stats",
+            nid=nid
+        )
+
+        if r.get(u'error'):
+            raise RequestError("Could not get instructor stats.\n{}".format(r))
+        else:
+            return r.get(u'result')
+
     def request(self, method, data=None, nid=None, nid_key='nid'):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
 
@@ -242,6 +266,30 @@ class PiazzaAPI(object):
             }),
             cookies=self.cookies
         ).json()
+
+    def get_statistics_csv(self, nid=None):
+        """Get CSV of class participation statistics (requires currently
+        authenticated user to be an Instructor)
+
+        :type  nid: str
+        :param nid: This is the ID of the network to which the request
+            the request should be made. This is optional and only to
+            override the existing `network_id` entered when creating the
+            class
+        :returns: String containing contents of CSV
+        """
+        self._check_authenticated()
+        from datetime import date
+
+        csv_url = "https://piazza.com/class_statistics/{nid}?day={d}".format(
+            nid=nid if nid else self._nid,
+            d=date.today().strftime("%b-%d")
+        )
+
+        return requests.get(
+            csv_url,
+            cookies=self.cookies
+        ).text
 
     def _check_authenticated(self):
         """Check that we're logged in and raise an exception if not.
