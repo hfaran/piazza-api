@@ -1,6 +1,6 @@
 # piazza-api
 
-Tiny wrapper around Piazza's Internal REST API
+Tiny wrapper around Piazza's Internal API
 
 ## Example
 ```
@@ -9,6 +9,8 @@ Tiny wrapper around Piazza's Internal REST API
 Email: ...
 Password: ...
 >>> p.get(181)
+...
+>>> p.enroll_students(["student@example.com", "anotherStudent@example.com"])
 ...
 ```
 
