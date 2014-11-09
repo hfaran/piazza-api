@@ -99,8 +99,6 @@ class PiazzaAPI(object):
         :param cid: This is the post ID which we grab
         :returns: Python object containing returned data
         """
-        self._check_authenticated()
-
         return self.request(
             method="content.get",
             data={"cid": cid},
@@ -125,8 +123,6 @@ class PiazzaAPI(object):
             of dicts of user data of all of the users in the network
             including the ones that were just added.
         """
-        self._check_authenticated()
-
         r = self.request(
             method="network.update",
             data={
@@ -152,8 +148,6 @@ class PiazzaAPI(object):
         :returns: Python object containing returned data, a list
             of dicts containing user data.
         """
-        self._check_authenticated()
-
         r = self.request(
             method="network.get_all_users",
             nid=nid
@@ -178,8 +172,6 @@ class PiazzaAPI(object):
         :returns: Python object containing returned data, a list
             of dicts containing user data.
         """
-        self._check_authenticated()
-
         r = self.request(
             method="network.get_users",
             data={"ids": user_ids},
@@ -205,8 +197,6 @@ class PiazzaAPI(object):
             of dicts of user data of all of the users remaining in
             the network after users are removed.
         """
-        self._check_authenticated()
-
         r = self.request(
             method="network.update",
             data={"remove_users": user_ids},
