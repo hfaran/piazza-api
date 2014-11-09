@@ -95,8 +95,7 @@ class PiazzaAPI(object):
         :param cid: This is the post ID which we grab
         :returns: Python object containing returned data
         """
-        if self.cookies is None:
-            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+        self._check_authenticated()
 
         nid = nid if nid else self._nid
         content_url = self.base_api_url
@@ -133,8 +132,7 @@ class PiazzaAPI(object):
             of dicts of user data of all of the users in the network
             including the ones that were just added.
         """
-        if self.cookies is None:
-            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+        self._check_authenticated()
 
         nid = nid if nid else self._nid
 
@@ -171,8 +169,7 @@ class PiazzaAPI(object):
         :returns: Python object containing returned data, a list
             of dicts containing user data.
         """
-        if self.cookies is None:
-            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+        self._check_authenticated()
 
         nid = nid if nid else self._nid
 
@@ -211,8 +208,7 @@ class PiazzaAPI(object):
             of dicts of user data of all of the users remaining in
             the network after users are removed.
         """
-        if self.cookies is None:
-            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+        self._check_authenticated()
 
         nid = nid if nid else self._nid
 
@@ -234,6 +230,15 @@ class PiazzaAPI(object):
         ).json()
 
         if r.get(u'error'):
-            raise Exception("Could not remove users.\n{}".format(r))
+            raise RequestError("Could not remove users.\n{}".format(r))
         else:
             return r.get(u'result')
+
+    def _check_authenticated(self):
+        """Check that we're logged in and raise an exception if not.
+
+        :raises: NotAuthenticatedError
+        """
+        if self.cookies is None:
+            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+
