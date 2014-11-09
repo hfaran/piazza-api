@@ -251,9 +251,8 @@ class PiazzaAPI(object):
         :param data: Key-value data to pass to Piazza in the request
         :type  nid: str
         :param nid: This is the ID of the network to which the request
-            the request should be made. This is optional and only to
-            override the existing `network_id` entered when creating the
-            class
+            should be made. This is optional and only to override the
+            existing `network_id` entered when creating the class
         :type  nid_key: str
         :param nid_key: Name expected by Piazza for `nid` when making request.
             (Usually and by default "nid", but sometimes "id" is expected)
