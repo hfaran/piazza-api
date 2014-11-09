@@ -221,6 +221,7 @@ class PiazzaAPI(object):
     def get_instructor_stats(self, nid=None):
         """Gets "Class at a Glance" stats visible to Instructors, like
         unanswered question count and number of total contributions.
+        Requires currently authenticated user to be an Instructor.
 
         :type  nid: str
         :param nid: This is the ID of the network to which the request
