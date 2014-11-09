@@ -221,8 +221,6 @@ class PiazzaAPI(object):
             class
         :returns: Python object containing "Class at a Glance" stats
         """
-        self._check_authenticated()
-
         r = self.request(
             method="network.get_instructor_stats",
             nid=nid
