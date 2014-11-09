@@ -10,6 +10,9 @@ class AuthenticationError(Exception):
 class NotAuthenticatedError(Exception):
     """NotAuthenticatedError"""
 
+class RequestError(Exception):
+    """RequestError"""
+
 
 class PiazzaAPI(object):
     """Tiny wrapper around Piazza's Internal API
@@ -155,7 +158,7 @@ class PiazzaAPI(object):
         ).json()
 
         if r.get(u'error'):
-            raise Exception("Could not add users.\n{}".format(r))
+            raise RequestError("Could not add users.\n{}".format(r))
         else:
             return r.get(u'result')
 
@@ -190,7 +193,7 @@ class PiazzaAPI(object):
         ).json()
 
         if r.get(u'error'):
-            raise Exception("Could not get users.\n{}".format(r))
+            raise RequestError("Could not get users.\n{}".format(r))
         else:
             return r.get(u'result')
 
