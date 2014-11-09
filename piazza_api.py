@@ -218,6 +218,28 @@ class PiazzaAPI(object):
         else:
             return r.get(u'result')
 
+    def get_instructor_stats(self, nid=None):
+        """Gets "Class at a Glance" stats visible to Instructors, like
+        unanswered question count and number of total contributions.
+
+        :type  nid: str
+        :param nid: This is the ID of the network to which the request
+            the request should be made. This is optional and only to
+            override the existing `network_id` entered when creating the
+            class
+        """
+        self._check_authenticated()
+
+        r = self.request(
+            method="network.get_instructor_stats",
+            nid=nid
+        )
+
+        if r.get(u'error'):
+            raise RequestError("Could not get instructor stats.\n{}".format(r))
+        else:
+            return r.get(u'result')
+
     def request(self, method, data=None, nid=None, nid_key='nid'):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
 
