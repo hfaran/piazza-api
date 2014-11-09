@@ -277,6 +277,30 @@ class PiazzaAPI(object):
             cookies=self.cookies
         ).json()
 
+    def get_statistics_csv(self, nid=None):
+        """Get CSV of class participation statistics (requires currently
+        authenticated user to be an Instructor)
+
+        :type  nid: str
+        :param nid: This is the ID of the network to which the request
+            the request should be made. This is optional and only to
+            override the existing `network_id` entered when creating the
+            class
+        :returns: String containing contents of CSV
+        """
+        self._check_authenticated()
+        from datetime import date
+
+        csv_url = "https://piazza.com/class_statistics/{nid}?day={d}".format(
+            nid=nid if nid else self._nid,
+            d=date.today().strftime("%b-%d")
+        )
+
+        return requests.get(
+            csv_url,
+            cookies=self.cookies
+        ).text
+
     def _check_authenticated(self):
         """Check that we're logged in and raise an exception if not.
 
