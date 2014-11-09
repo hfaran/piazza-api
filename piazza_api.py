@@ -100,22 +100,11 @@ class PiazzaAPI(object):
         """
         self._check_authenticated()
 
-        nid = nid if nid else self._nid
-        content_url = self.base_api_url
-        content_params = {"method": "content.get"}
-        content_data = {
-            "method": "content.get",
-            "params": {
-                "cid": cid,
-                "nid": nid
-            }
-        }
-        return requests.post(
-            content_url,
-            data=json.dumps(content_data),
-            params=content_params,
-            cookies=self.cookies
-        ).json()
+        return self.request(
+            method="content.get",
+            data={"cid": cid},
+            nid=nid
+        )
 
     def enroll_students(self, student_emails, nid=None):
         """Enroll students in a network `nid`.
@@ -137,25 +126,15 @@ class PiazzaAPI(object):
         """
         self._check_authenticated()
 
-        nid = nid if nid else self._nid
-
-        content_url = self.base_api_url
-        content_params = {"method": "network.update"}
-        content_data = {
-            "method": "network.update",
-            "params": {
-                "id": nid,
+        r = self.request(
+            method="network.update",
+            data={
                 "from": "ClassSettingsPage",
                 "add_students": student_emails
-            }
-        }
-
-        r = requests.post(
-            content_url,
-            data=json.dumps(content_data),
-            params=content_params,
-            cookies=self.cookies
-        ).json()
+            },
+            nid=nid,
+            nid_key="id"
+        )
 
         if r.get(u'error'):
             raise RequestError("Could not add users.\n{}".format(r))
@@ -174,23 +153,10 @@ class PiazzaAPI(object):
         """
         self._check_authenticated()
 
-        nid = nid if nid else self._nid
-
-        content_url = self.base_api_url
-        content_params = {"method": "network.get_all_users"}
-        content_data = {
-           "method": "network.get_all_users",
-           "params": {
-                "nid": nid
-           }
-        }
-
-        r = requests.post(
-            content_url,
-            data=json.dumps(content_data),
-            params=content_params,
-            cookies=self.cookies
-        ).json()
+        r = self.request(
+            method="network.get_all_users",
+            nid=nid
+        )
 
         if r.get(u'error'):
             raise RequestError("Could not get users.\n{}".format(r))
@@ -213,29 +179,51 @@ class PiazzaAPI(object):
         """
         self._check_authenticated()
 
-        nid = nid if nid else self._nid
-
-        content_url = self.base_api_url
-        content_params = {"method": "network.update"}
-        content_data = {
-           "method": "network.update",
-           "params": {
-                "id": nid,
-                "remove_users": user_ids
-           }
-        }
-
-        r = requests.post(
-            content_url,
-            data=json.dumps(content_data),
-            params=content_params,
-            cookies=self.cookies
-        ).json()
+        r = self.request(
+            method="network.update",
+            data={"remove_users": user_ids},
+            nid=nid,
+            nid_key="id"
+        )
 
         if r.get(u'error'):
             raise RequestError("Could not remove users.\n{}".format(r))
         else:
             return r.get(u'result')
+
+    def request(self, method, data=None, nid=self._nid, nid_key='nid'):
+        """Get data from arbitrary Piazza API endpoint `method` in network `nid`
+
+        :type  method: str
+        :param method: An internal Piazza API method name like `content.get` or `network.get_users`
+        :type  data: dict
+        :param data: Key-value data to pass to Piazza in the request
+        :type  nid: str
+        :param nid: This is the ID of the network to which the request
+            the request should be made. This is optional and only to
+            override the existing `network_id` entered when creating the
+            class
+        :type  nid_key: str
+        :param nid_key: Name expected by Piazza for `nid` when making request.
+            (Usually and by default "nid", but sometimes "id" is expected)
+        :returns: Python object containing returned data
+        """
+        self._check_authenticated()
+
+        if data is None:
+            data = {}
+
+        return requests.post(
+            self.base_api_url,
+            params={
+                "method": method
+            },
+            data=json.dumps({
+                "method": method,
+                "params": dict({nid_key: nid}, **data)
+            }),
+            cookies=self.cookies
+        ).json()
 
     def _check_authenticated(self):
         """Check that we're logged in and raise an exception if not.
