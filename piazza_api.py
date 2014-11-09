@@ -216,9 +216,8 @@ class PiazzaAPI(object):
 
         :type  nid: str
         :param nid: This is the ID of the network to which the request
-            the request should be made. This is optional and only to
-            override the existing `network_id` entered when creating the
-            class
+            should be made. This is optional and only to override the
+            existing `network_id` entered when creating the class
         :returns: Python object containing "Class at a Glance" stats
         """
         r = self.request(
@@ -271,9 +270,8 @@ class PiazzaAPI(object):
 
         :type  nid: str
         :param nid: This is the ID of the network to which the request
-            the request should be made. This is optional and only to
-            override the existing `network_id` entered when creating the
-            class
+            should be made. This is optional and only to override the
+            existing `network_id` entered when creating the class
         :returns: String containing contents of CSV
         """
         self._check_authenticated()
