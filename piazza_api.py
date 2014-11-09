@@ -10,6 +10,7 @@ class AuthenticationError(Exception):
 class NotAuthenticatedError(Exception):
     """NotAuthenticatedError"""
 
+
 class RequestError(Exception):
     """RequestError"""
 
