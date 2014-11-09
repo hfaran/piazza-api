@@ -102,7 +102,7 @@ class PiazzaAPI(object):
 
         nid = nid if nid else self._nid
         content_url = self.base_api_url
-        content_params = {"method": "get.content"}
+        content_params = {"method": "content.get"}
         content_data = {
             "method": "content.get",
             "params": {
