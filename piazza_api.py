@@ -163,6 +163,33 @@ class PiazzaAPI(object):
         else:
             return r.get(u'result')
 
+    def get_users(self, user_ids, nid=None):
+        """Get a listing of data for specific users `user_ids` in
+        a network `nid`
+
+        :type  user_ids: list of str
+        :param user_ids: a list of user ids. These are the same
+            ids that are returned by get_all_users.
+        :type  nid: str
+        :param nid: This is the ID of the network to add students
+            to. This is optional and only to override the existing
+            `network_id` entered when created the class
+        :returns: Python object containing returned data, a list
+            of dicts containing user data.
+        """
+        self._check_authenticated()
+
+        r = self.request(
+            method="network.get_users",
+            data={"ids": user_ids},
+            nid=nid
+        )
+
+        if r.get(u'error'):
+            raise RequestError("Could not get users.\n{}".format(r))
+        else:
+            return r.get(u'result')
+
     def remove_users(self, user_ids, nid=None):
         """Remove users from a network `nid`
 
