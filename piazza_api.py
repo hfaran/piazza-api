@@ -191,7 +191,7 @@ class PiazzaAPI(object):
         else:
             return r.get(u'result')
 
-    def request(self, method, data=None, nid=self._nid, nid_key='nid'):
+    def request(self, method, data=None, nid=None, nid_key='nid'):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
 
         :type  method: str
@@ -210,6 +210,7 @@ class PiazzaAPI(object):
         """
         self._check_authenticated()
 
+        nid = nid if nid else self._nid
         if data is None:
             data = {}
 
