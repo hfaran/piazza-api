@@ -29,7 +29,10 @@ class Piazza(object):
     """
     def __init__(self, network_id):
         self._nid = network_id
-        self.base_api_url = 'https://piazza.com/logic/api'
+        self.base_api_urls = {
+            "logic": "https://piazza.com/logic/api",
+            "main": "https://piazza.com/main/api",
+        }
         self.cookies = None
 
     def user_auth(self, email=None, password=None):
@@ -51,7 +54,7 @@ class Piazza(object):
         # If the user/password match, the server respond will contain a
         #  session cookie that you can use to authenticate future requests.
         r = requests.post(
-            self.base_api_url,
+            self.base_api_urls["logic"],
             data=json.dumps(login_data),
         )
         if r.json()["result"] not in ["OK"]:
@@ -278,7 +281,8 @@ class Piazza(object):
         return self._handle_error(r, "Search with query '{}' failed."
                                   .format(query))
 
-    def request(self, method, data=None, nid=None, nid_key='nid'):
+    def request(self, method, data=None, nid=None, nid_key='nid',
+                api_type="logic"):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
 
         :type  method: str
@@ -302,7 +306,7 @@ class Piazza(object):
             data = {}
 
         return requests.post(
-            self.base_api_url,
+            self.base_api_urls[api_type],
             data=json.dumps({
                 "method": method,
                 "params": dict({nid_key: nid}, **data)
