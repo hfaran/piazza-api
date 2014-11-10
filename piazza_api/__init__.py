@@ -36,21 +36,16 @@ class Piazza(object):
         email = raw_input("Email: ") if email is None else email
         password = getpass.getpass() if password is None else password
 
-        login_url = self.base_api_url
         login_data = {
             "method": "user.login",
-            "params": {
-                "email": email,
-                "pass": password
-            }
+            "params": {"email": email,
+                       "pass": password}
         }
-        login_params = {"method": "user.login"}
         # If the user/password match, the server respond will contain a
         #  session cookie that you can use to authenticate future requests.
         r = requests.post(
-            login_url,
+            self.base_api_url,
             data=json.dumps(login_data),
-            params=login_params
         )
         if r.json()["result"] not in ["OK"]:
             raise AuthenticationError(
@@ -223,9 +218,9 @@ class Piazza(object):
 
         return requests.post(
             self.base_api_url,
-            params={
-                "method": method
-            },
+            # XXX From testing, this is unnecessary (Having a query param for method; the method in the request
+            # body seems to be sufficient
+            # params={"method": method},
             data=json.dumps({
                 "method": method,
                 "params": dict({nid_key: nid}, **data)
