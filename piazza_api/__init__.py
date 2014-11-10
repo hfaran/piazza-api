@@ -29,7 +29,10 @@ class Piazza(object):
     """
     def __init__(self, network_id):
         self._nid = network_id
-        self.base_api_url = 'https://piazza.com/logic/api'
+        self.base_api_urls = {
+            "logic": "https://piazza.com/logic/api",
+            "main": "https://piazza.com/main/api",
+        }
         self.cookies = None
 
     def user_auth(self, email=None, password=None):
@@ -51,7 +54,7 @@ class Piazza(object):
         # If the user/password match, the server respond will contain a
         #  session cookie that you can use to authenticate future requests.
         r = requests.post(
-            self.base_api_url,
+            self.base_api_urls["logic"],
             data=json.dumps(login_data),
         )
         if r.json()["result"] not in ["OK"]:
@@ -186,7 +189,120 @@ class Piazza(object):
         )
         return self._handle_error(r, "Could not remove users.")
 
-    def request(self, method, data=None, nid=None, nid_key='nid'):
+    def get_my_feed(self, limit=150, offset=20, sort="updated", nid=None):
+        """Get my feed
+
+        :type limit: int
+        :param limit: Number of posts from feed to get, starting from ``offset``
+        :type offset: int
+        :param offset: Offset starting from bottom of feed
+        :type sort: str
+        :param sort: How to sort feed that will be retrieved; only current
+            known value is "updated"
+        :type  nid: str
+        :param nid: This is the ID of the network to remove students
+            from. This is optional and only to override the existing
+            `network_id` entered when created the class
+        """
+        r = self.request(
+            method="network.get_my_feed",
+            nid=nid,
+            data=dict(
+                limit=limit,
+                offset=offset,
+                sort=sort
+            )
+        )
+        return self._handle_error(r, "Could not retrieve your feed.")
+
+    def filter_feed(self, updated=False, following=False, folder=False,
+                     filter_folder="", sort="updated", nid=None):
+        """Get filtered feed
+
+        Only one filter type (updated, following, folder) is possible.
+
+        :type  nid: str
+        :param nid: This is the ID of the network to remove students
+            from. This is optional and only to override the existing
+            `network_id` entered when created the class
+        :type sort: str
+        :param sort: How to sort feed that will be retrieved; only current
+            known value is "updated"
+        :type updated: bool
+        :param updated: Set to filter through only posts which have been updated
+            since you last read them
+        :type following: bool
+        :param following: Set to filter through only posts which you are
+            following
+        :type folder: bool
+        :param folder: Set to filter through only posts which are in the
+            provided ``filter_folder``
+        :type filter_folder: str
+        :param filter_folder: Name of folder to show posts from; required
+            only if ``folder`` is set
+        """
+        assert sum([updated, following, folder]) == 1
+        if folder:
+            assert filter_folder
+
+        if updated:
+            filter_type = dict(updated=1)
+        elif following:
+            filter_type = dict(following=1)
+        else:
+            filter_type = dict(folder=1, filter_folder=filter_folder)
+
+        r = self.request(
+            nid=nid,
+            method="network.filter_feed",
+            data=dict(
+                sort=sort,
+                **filter_type
+            )
+        )
+        return self._handle_error(r, "Could not retrieve filtered feed.")
+
+    def search(self, query, nid=None):
+        """Search for posts with ``query``
+
+        :type  nid: str
+        :param nid: This is the ID of the network to remove students
+            from. This is optional and only to override the existing
+            `network_id` entered when created the class
+        :type query: str
+        :param query: The search query; should just be keywords for posts
+            that you are looking for
+        """
+        r = self.request(
+            method="network.search",
+            nid=nid,
+            data=dict(query=query)
+        )
+        return self._handle_error(r, "Search with query '{}' failed."
+                                  .format(query))
+
+    def get_stats(self, nid=None):
+        """Get statistics for class
+
+        :type  nid: str
+        :param nid: This is the ID of the network to remove students
+            from. This is optional and only to override the existing
+            `network_id` entered when created the class
+        """
+        r = self.request(
+            api_type="main",
+            method="network.get_stats",
+            nid=nid,
+        )
+        return self._handle_error(r, "Could not retrieve stats for class.")
+
+    def get_user_profile(self):
+        """Get profile of the current user"""
+        r = self.request(method="user_profile.get_profile")
+        return self._handle_error(r, "Could not get user profile.")
+
+    def request(self, method, data=None, nid=None, nid_key='nid',
+                api_type="logic"):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
 
         :type  method: str
@@ -210,7 +326,7 @@ class Piazza(object):
             data = {}
 
         return requests.post(
-            self.base_api_url,
+            self.base_api_urls[api_type],
             data=json.dumps({
                 "method": method,
                 "params": dict({nid_key: nid}, **data)
