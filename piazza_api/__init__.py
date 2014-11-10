@@ -186,6 +186,32 @@ class Piazza(object):
         )
         return self._handle_error(r, "Could not remove users.")
 
+    def get_my_feed(self, limit=150, offset=20, sort="updated", nid=None):
+        """Get my feed
+
+        :type limit: int
+        :param limit: Number of posts from feed to get, starting from ``offset``
+        :type offset: int
+        :param offset: Offset starting from bottom of feed
+        :type sort: str
+        :param sort: How to sort feed that will be retrieved; only current
+            known value is "updated"
+        :type  nid: str
+        :param nid: This is the ID of the network to remove students
+            from. This is optional and only to override the existing
+            `network_id` entered when created the class
+        """
+        r = self.request(
+            method="network.get_my_feed",
+            nid=nid,
+            data=dict(
+                limit=limit,
+                offset=offset,
+                sort=sort
+            )
+        )
+        return self._handle_error(r, "Could not retrieve your feed.")
+
     def request(self, method, data=None, nid=None, nid_key='nid'):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
 
