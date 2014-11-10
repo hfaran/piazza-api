@@ -281,6 +281,21 @@ class Piazza(object):
         return self._handle_error(r, "Search with query '{}' failed."
                                   .format(query))
 
+    def get_stats(self, nid=None):
+        """Get statistics for class
+
+        :type  nid: str
+        :param nid: This is the ID of the network to remove students
+            from. This is optional and only to override the existing
+            `network_id` entered when created the class
+        """
+        r = self.request(
+            api_type="main",
+            method="network.get_stats",
+            nid=nid,
+        )
+        return self._handle_error(r, "Could not retrieve stats for class.")
+
     def request(self, method, data=None, nid=None, nid_key='nid',
                 api_type="logic"):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
