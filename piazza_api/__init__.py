@@ -259,6 +259,25 @@ class Piazza(object):
         )
         return self._handle_error(r, "Could not retrieve filtered feed.")
 
+    def search(self, query, nid=None):
+        """Search for posts with ``query``
+
+        :type  nid: str
+        :param nid: This is the ID of the network to remove students
+            from. This is optional and only to override the existing
+            `network_id` entered when created the class
+        :type query: str
+        :param query: The search query; should just be keywords for posts
+            that you are looking for
+        """
+        r = self.request(
+            method="network.search",
+            nid=nid,
+            data=dict(query=query)
+        )
+        return self._handle_error(r, "Search with query '{}' failed."
+                                  .format(query))
+
     def request(self, method, data=None, nid=None, nid_key='nid'):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
 
