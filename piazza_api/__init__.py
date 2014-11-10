@@ -9,8 +9,11 @@ from piazza_api.exceptions import (
 )
 
 
+__version__ = "0.3.0"
+
+
 class Piazza(object):
-    """Tiny wrapper around Piazza's Internal API
+    """Unofficial Client for Piazza's Internal API
 
     Example:
         >>> p = Piazza("hl5qm84dl4t3x2")
