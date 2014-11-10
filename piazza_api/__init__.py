@@ -296,6 +296,11 @@ class Piazza(object):
         )
         return self._handle_error(r, "Could not retrieve stats for class.")
 
+    def get_user_profile(self):
+        """Get profile of the current user"""
+        r = self.request(method="user_profile.get_profile")
+        return self._handle_error(r, "Could not get user profile.")
+
     def request(self, method, data=None, nid=None, nid_key='nid',
                 api_type="logic"):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
