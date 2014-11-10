@@ -212,6 +212,53 @@ class Piazza(object):
         )
         return self._handle_error(r, "Could not retrieve your feed.")
 
+    def filter_feed(self, updated=False, following=False, folder=False,
+                     filter_folder="", sort="updated", nid=None):
+        """Get filtered feed
+
+        Only one filter type (updated, following, folder) is possible.
+
+        :type  nid: str
+        :param nid: This is the ID of the network to remove students
+            from. This is optional and only to override the existing
+            `network_id` entered when created the class
+        :type sort: str
+        :param sort: How to sort feed that will be retrieved; only current
+            known value is "updated"
+        :type updated: bool
+        :param updated: Set to filter through only posts which have been updated
+            since you last read them
+        :type following: bool
+        :param following: Set to filter through only posts which you are
+            following
+        :type folder: bool
+        :param folder: Set to filter through only posts which are in the
+            provided ``filter_folder``
+        :type filter_folder: str
+        :param filter_folder: Name of folder to show posts from; required
+            only if ``folder`` is set
+        """
+        assert sum([updated, following, folder]) == 1
+        if folder:
+            assert filter_folder
+
+        if updated:
+            filter_type = dict(updated=1)
+        elif following:
+            filter_type = dict(following=1)
+        else:
+            filter_type = dict(folder=1, filter_folder=filter_folder)
+
+        r = self.request(
+            nid=nid,
+            method="network.filter_feed",
+            data=dict(
+                sort=sort,
+                **filter_type
+            )
+        )
+        return self._handle_error(r, "Could not retrieve filtered feed.")
+
     def request(self, method, data=None, nid=None, nid_key='nid'):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
 
