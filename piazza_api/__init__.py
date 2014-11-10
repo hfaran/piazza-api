@@ -17,7 +17,7 @@ class Piazza(object):
         >>> p.user_auth()
         Email: ...
         Password: ...
-        >>> p.get(181)
+        >>> p.get_post(181)
         ...
 
     :type  network_id: str
@@ -77,7 +77,7 @@ class Piazza(object):
             res = requests.get(url)
         self.cookies = res.cookies
 
-    def get(self, cid, nid=None):
+    def get_post(self, cid, nid=None):
         """Get data from post `cid` in network `nid`
 
         :type  nid: str
@@ -214,6 +214,10 @@ class Piazza(object):
             }),
             cookies=self.cookies
         ).json()
+
+    ###################
+    # Private Methods #
+    ###################
 
     def _check_authenticated(self):
         """Check that we're logged in and raise an exception if not.
