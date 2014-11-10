@@ -88,11 +88,12 @@ class Piazza(object):
         :param cid: This is the post ID which we grab
         :returns: Python object containing returned data
         """
-        return self.request(
+        r = self.request(
             method="content.get",
             data={"cid": cid},
             nid=nid
         )
+        return self._handle_error(r, "Could not get post {}.".format(cid))
 
     def enroll_students(self, student_emails, nid=None):
         """Enroll students in a network `nid`.
@@ -121,11 +122,7 @@ class Piazza(object):
             nid=nid,
             nid_key="id"
         )
-
-        if r.get(u'error'):
-            raise RequestError("Could not add users.\n{}".format(r))
-        else:
-            return r.get(u'result')
+        return self._handle_error(r, "Could not add users.")
 
     def get_all_users(self, nid=None):
         """Get a listing of data for each user in a network `nid`
@@ -141,11 +138,7 @@ class Piazza(object):
             method="network.get_all_users",
             nid=nid
         )
-
-        if r.get(u'error'):
-            raise RequestError("Could not get users.\n{}".format(r))
-        else:
-            return r.get(u'result')
+        return self._handle_error(r, "Could not get users.")
 
     def get_users(self, user_ids, nid=None):
         """Get a listing of data for specific users `user_ids` in
@@ -166,11 +159,7 @@ class Piazza(object):
             data={"ids": user_ids},
             nid=nid
         )
-
-        if r.get(u'error'):
-            raise RequestError("Could not get users.\n{}".format(r))
-        else:
-            return r.get(u'result')
+        return self._handle_error(r, "Could not get users.")
 
     def remove_users(self, user_ids, nid=None):
         """Remove users from a network `nid`
@@ -192,11 +181,7 @@ class Piazza(object):
             nid=nid,
             nid_key="id"
         )
-
-        if r.get(u'error'):
-            raise RequestError("Could not remove users.\n{}".format(r))
-        else:
-            return r.get(u'result')
+        return self._handle_error(r, "Could not remove users.")
 
     def request(self, method, data=None, nid=None, nid_key='nid'):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
@@ -238,3 +223,22 @@ class Piazza(object):
         if self.cookies is None:
             raise NotAuthenticatedError("You must authenticate before "
                                         "making any other requests.")
+
+    def _handle_error(self, result, err_msg):
+        """Check result for error
+
+        :type result: dict
+        :param result: response body
+        :type err_msg: str
+        :param err_msg: The message given to the :class:`RequestError` instance
+            raised
+        :returns: Actual result from result
+        :raises RequestError: If result has error
+        """
+        if result.get(u'error'):
+            raise RequestError("{}\nResponse: {}".format(
+                err_msg,
+                json.dumps(result, indent=2)
+            ))
+        else:
+            return result.get(u'result')
