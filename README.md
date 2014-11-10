@@ -1,6 +1,6 @@
 # piazza-api
 
-Tiny wrapper around Piazza's Internal API
+Unofficial Client for Piazza's Internal API
 
 ## Example
 ```
