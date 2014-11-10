@@ -2,7 +2,11 @@ import getpass
 import json
 import requests
 
-from piazza_api.exceptions import AuthenticationError, RequestError, NotAuthenticatedError
+from piazza_api.exceptions import (
+    AuthenticationError,
+    RequestError,
+    NotAuthenticatedError
+)
 
 
 class Piazza(object):
@@ -48,15 +52,15 @@ class Piazza(object):
             data=json.dumps(login_data),
         )
         if r.json()["result"] not in ["OK"]:
-            raise AuthenticationError(
-                "Could not authenticate.\n{}".format(r.json())
-            )
+            raise AuthenticationError("Could not authenticate.\n{}"
+                                      .format(r.json()))
         self.cookies = r.cookies
 
     def demo_auth(self, auth=None, url=None):
         """Authenticate with a "Share Your Class" URL using a demo user.
 
-        You may provide either the entire ``url`` or simply the ``auth`` parameter.
+        You may provide either the entire ``url`` or simply the ``auth``
+        parameter.
 
         :param url: Example - "https://piazza.com/demo_login?nid=hbj11a1gcvl1s6&auth=06c111b"
         :param auth: Example - "06c111b"
@@ -198,7 +202,8 @@ class Piazza(object):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
 
         :type  method: str
-        :param method: An internal Piazza API method name like `content.get` or `network.get_users`
+        :param method: An internal Piazza API method name like `content.get`
+            or `network.get_users`
         :type  data: dict
         :param data: Key-value data to pass to Piazza in the request
         :type  nid: str
@@ -218,9 +223,6 @@ class Piazza(object):
 
         return requests.post(
             self.base_api_url,
-            # XXX From testing, this is unnecessary (Having a query param for method; the method in the request
-            # body seems to be sufficient
-            # params={"method": method},
             data=json.dumps({
                 "method": method,
                 "params": dict({nid_key: nid}, **data)
@@ -234,4 +236,5 @@ class Piazza(object):
         :raises: NotAuthenticatedError
         """
         if self.cookies is None:
-            raise NotAuthenticatedError("You must authenticate before making any other requests.")
+            raise NotAuthenticatedError("You must authenticate before "
+                                        "making any other requests.")
