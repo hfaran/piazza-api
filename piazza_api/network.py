@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from .rpc import PiazzaRPC
 
 
@@ -51,6 +53,19 @@ class Network(object):
         self._nid = network_id
         self._rpc = PiazzaRPC(network_id=self._nid)
         self._rpc.cookies = cookies
+
+        ff = namedtuple('FeedFilters', ['unread', 'following', 'folder'])
+        self._feed_filters = ff(UnreadFilter, FollowingFilter, FolderFilter)
+
+    @property
+    def feed_filters(self):
+        """namedtuple instance containing FeedFilter classes for easy access
+
+        :rtype: namedtuple
+        :returns: namedtuple with unread, following, and folder attributes
+            mapping to filters
+        """
+        return self._feed_filters
 
     #########
     # Posts #
