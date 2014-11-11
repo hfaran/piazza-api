@@ -102,7 +102,6 @@ class PiazzaRPC(object):
         Piazza will email these students with instructions to
         activate their account.
 
-
         :type  student_emails: list of str
         :param student_emails: A listing of email addresses to enroll
             in the network (or class). This can be a list of length one.
