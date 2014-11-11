@@ -81,14 +81,29 @@ class Network(object):
         """
         return self._rpc.content_get(cid=cid)
 
-    def iter_all_posts(self):
+    def iter_all_posts(self, limit=None):
+        """Get all posts visible to the current user
+
+        This grabs you current feed and ids of all posts from it; each post
+        is then individually fetched. This method does not go against
+        a bulk endpoint; it retrieves each post individually, so a
+        caution to the user when using this.
+
+        :type limit: int|None
+        :param limit: If given, will limit the number of posts to fetch
+            before the generator is exhausted and raises StopIteration.
+            No special consideration is given to `0`; provide `None` to
+            retrieve all posts.
+        :returns: An iterator which yields all posts which the current user
+            can view
+        :rtype: generator
         """
-        TODO implement and remove
-        Can do this by looking at the feed and grabbing all ids
-        of posts from feed; the ids, work for getting posts
-        :return:
-        """
-        pass
+        feed = self.get_feed(limit=999999, offset=0)
+        cids = [post['id'] for post in feed["feed"]]
+        if limit is not None:
+            cids = cids[:limit]
+        for cid in cids:
+            yield self.get_post(cid)
 
     #########
     # Users #
