@@ -3,7 +3,8 @@ import json
 
 import requests
 
-from piazza_api.exceptions import AuthenticationError, NotAuthenticatedError, RequestError
+from piazza_api.exceptions import AuthenticationError, NotAuthenticatedError, \
+    RequestError
 
 
 class PiazzaRPC(object):
@@ -210,7 +211,7 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Could not retrieve your feed.")
 
     def filter_feed(self, updated=False, following=False, folder=False,
-                     filter_folder="", sort="updated", nid=None):
+                    filter_folder="", sort="updated", nid=None):
         """Get filtered feed
 
         Only one filter type (updated, following, folder) is possible.
@@ -296,7 +297,7 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Could not get user profile.")
 
     def request(self, method, data=None, nid=None, nid_key='nid',
-                api_type="logic"):
+                api_type="logic", return_response=False):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
 
         :type  method: str
@@ -312,6 +313,9 @@ class PiazzaRPC(object):
         :param nid_key: Name expected by Piazza for `nid` when making request.
             (Usually and by default "nid", but sometimes "id" is expected)
         :returns: Python object containing returned data
+        :type return_response: bool
+        :param return_response: If set, returns whole :class:`requests.Response`
+            object rather than just the response body
         """
         self._check_authenticated()
 
@@ -319,14 +323,15 @@ class PiazzaRPC(object):
         if data is None:
             data = {}
 
-        return requests.post(
+        response = requests.post(
             self.base_api_urls[api_type],
             data=json.dumps({
                 "method": method,
                 "params": dict({nid_key: nid}, **data)
             }),
             cookies=self.cookies
-        ).json()
+        )
+        return response if return_response else response.json()
 
     ###################
     # Private Methods #
