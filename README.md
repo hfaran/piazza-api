@@ -6,7 +6,7 @@ Unofficial Client for Piazza's Internal API
 ```
 >>> from piazza_api import Piazza
 >>> p = Piazza("hl5qm84dl4t3x2")
->>> p.user_auth()
+>>> p.user_login()
 Email: ...
 Password: ...
 >>> p.get_post(181)

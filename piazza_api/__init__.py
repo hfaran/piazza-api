@@ -17,7 +17,7 @@ class Piazza(object):
 
     Example:
         >>> p = Piazza("hl5qm84dl4t3x2")
-        >>> p.user_auth()
+        >>> p.user_login()
         Email: ...
         Password: ...
         >>> p.get_post(181)
@@ -35,7 +35,7 @@ class Piazza(object):
         }
         self.cookies = None
 
-    def user_auth(self, email=None, password=None):
+    def user_login(self, email=None, password=None):
         """Login with email, password and get back a session cookie
 
         :type  email: str
