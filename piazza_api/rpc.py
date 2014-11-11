@@ -195,7 +195,7 @@ class PiazzaRPC(object):
         :param sort: How to sort feed that will be retrieved; only current
             known value is "updated"
         :type  nid: str
-        :param nid: This is the ID of the network to remove students
+        :param nid: This is the ID of the network to get the feed
             from. This is optional and only to override the existing
             `network_id` entered when created the class
         """
@@ -217,7 +217,7 @@ class PiazzaRPC(object):
         Only one filter type (updated, following, folder) is possible.
 
         :type  nid: str
-        :param nid: This is the ID of the network to remove students
+        :param nid: This is the ID of the network to get the feed
             from. This is optional and only to override the existing
             `network_id` entered when created the class
         :type sort: str
@@ -261,7 +261,7 @@ class PiazzaRPC(object):
         """Search for posts with ``query``
 
         :type  nid: str
-        :param nid: This is the ID of the network to remove students
+        :param nid: This is the ID of the network to get the feed
             from. This is optional and only to override the existing
             `network_id` entered when created the class
         :type query: str
@@ -280,7 +280,7 @@ class PiazzaRPC(object):
         """Get statistics for class
 
         :type  nid: str
-        :param nid: This is the ID of the network to remove students
+        :param nid: This is the ID of the network to get stats
             from. This is optional and only to override the existing
             `network_id` entered when created the class
         """
