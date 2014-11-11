@@ -4,8 +4,8 @@ Unofficial Client for Piazza's Internal API
 
 ## Example
 ```
->>> from piazza_api import Piazza
->>> p = Piazza("hl5qm84dl4t3x2")
+>>> from piazza_api.rpc import PiazzaRPC
+>>> p = PiazzaRPC("hl5qm84dl4t3x2")
 >>> p.user_login()
 Email: ...
 Password: ...
