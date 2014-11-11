@@ -20,7 +20,7 @@ class Piazza(object):
         >>> p.user_login()
         Email: ...
         Password: ...
-        >>> p.get_post(181)
+        >>> p.content_get(181)
         ...
 
     :type  network_id: str
@@ -62,7 +62,7 @@ class Piazza(object):
                                       .format(r.json()))
         self.cookies = r.cookies
 
-    def demo_auth(self, auth=None, url=None):
+    def demo_login(self, auth=None, url=None):
         """Authenticate with a "Share Your Class" URL using a demo user.
 
         You may provide either the entire ``url`` or simply the ``auth``
@@ -83,7 +83,7 @@ class Piazza(object):
             res = requests.get(url)
         self.cookies = res.cookies
 
-    def get_post(self, cid, nid=None):
+    def content_get(self, cid, nid=None):
         """Get data from post `cid` in network `nid`
 
         :type  nid: str
@@ -101,7 +101,7 @@ class Piazza(object):
         )
         return self._handle_error(r, "Could not get post {}.".format(cid))
 
-    def enroll_students(self, student_emails, nid=None):
+    def add_students(self, student_emails, nid=None):
         """Enroll students in a network `nid`.
 
         Piazza will email these students with instructions to
