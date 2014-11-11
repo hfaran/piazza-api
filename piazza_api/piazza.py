@@ -35,11 +35,11 @@ class Piazza(object):
         self._rpc_api.demo_login(auth=auth, url=url)
 
     def network(self, network_id):
-        """Returns Network instance for ``network_id``
+        """Returns :class:`Network` instance for ``network_id``
 
-        :type  nid: str
-        :param nid: This is the ID of the network (or class) from which
-            to query posts. This can be found by visiting your class page
+        :type  network_id: str
+        :param network_id: This is the ID of the network.
+            This can be found by visiting your class page
             on Piazza's web UI and grabbing it from
             https://piazza.com/class/{network_id}
         """
