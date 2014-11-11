@@ -4,7 +4,7 @@ import json
 import requests
 
 from piazza_api.exceptions import AuthenticationError, NotAuthenticatedError, \
-    RequestError
+    RequestError, NoNetworkIDError
 
 
 class PiazzaRPC(object):
@@ -18,11 +18,11 @@ class PiazzaRPC(object):
         >>> p.content_get(181)
         ...
 
-    :type  network_id: str
+    :type  network_id: str|None
     :param network_id: This is the ID of the network (or class) from which
         to query posts
     """
-    def __init__(self, network_id):
+    def __init__(self, network_id=None):
         self._nid = network_id
         self.base_api_urls = {
             "logic": "https://piazza.com/logic/api",
@@ -320,6 +320,8 @@ class PiazzaRPC(object):
         self._check_authenticated()
 
         nid = nid if nid else self._nid
+        if nid is None:
+            raise NoNetworkIDError("No Network ID was provided for use.")
         if data is None:
             data = {}
 
