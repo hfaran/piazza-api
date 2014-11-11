@@ -188,7 +188,6 @@ class Network(object):
         :param limit: Number of posts from feed to get, starting from ``offset``
         :type offset: int
         :param offset: Offset starting from bottom of feed
-        :type sort: str
         :rtype: dict
         :returns: Feed metadata, including list of posts in feed format; this
             means they are not the full posts but only in partial form as

@@ -1,5 +1,4 @@
 from .rpc import PiazzaRPC
-from .exceptions import NotAuthenticatedError
 from .network import Network
 
 

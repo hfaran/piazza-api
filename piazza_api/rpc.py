@@ -4,7 +4,7 @@ import json
 import requests
 
 from piazza_api.exceptions import AuthenticationError, NotAuthenticatedError, \
-    RequestError, NoNetworkIDError
+    RequestError
 
 
 class PiazzaRPC(object):
