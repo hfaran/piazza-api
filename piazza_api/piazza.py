@@ -4,9 +4,12 @@ from .network import Network
 
 
 class Piazza(object):
-    """Unofficial Client for Piazza's Internal API"""
-    def __init__(self):
-        self._cookies = None
+    """Unofficial Client for Piazza's Internal API
+
+    :type piazza_rpc: :class:`PiazzaRPC`
+    """
+    def __init__(self, piazza_rpc=None):
+        self._rpc_api = piazza_rpc if piazza_rpc else None
 
     def user_login(self, email=None, password=None):
         """Login with email, password and get back a session cookie
@@ -16,9 +19,8 @@ class Piazza(object):
         :type  password: str
         :param password: The password used for authentication
         """
-        rpc_api = PiazzaRPC()
-        rpc_api.user_login(email=email, password=password)
-        self._cookies = rpc_api.cookies
+        self._rpc_api = PiazzaRPC()
+        self._rpc_api.user_login(email=email, password=password)
 
     def demo_login(self, auth=None, url=None):
         """Authenticate with a "Share Your Class" URL using a demo user.
@@ -29,9 +31,8 @@ class Piazza(object):
         :param url: Example - "https://piazza.com/demo_login?nid=hbj11a1gcvl1s6&auth=06c111b"
         :param auth: Example - "06c111b"
         """
-        rpc_api = PiazzaRPC()
-        rpc_api.demo_login(auth=auth, url=url)
-        self._cookies = rpc_api.cookies
+        self._rpc_api = PiazzaRPC()
+        self._rpc_api.demo_login(auth=auth, url=url)
 
     def network(self, network_id):
         """Returns Network instance for ``network_id``
@@ -43,8 +44,15 @@ class Piazza(object):
             https://piazza.com/class/{network_id}
         """
         self._ensure_authenticated()
-        return Network(network_id, self._cookies)
+        return Network(network_id, self._rpc_api.cookies)
+
+    def get_user_profile(self):
+        """Get profile of the current user
+
+        :returns: Profile of currently authenticated user
+        :rtype: dict
+        """
+        return self._rpc_api.get_user_profile()
 
     def _ensure_authenticated(self):
-        if self._cookies is None:
-            raise NotAuthenticatedError("You must log in first.")
+        self._rpc_api._check_authenticated()
