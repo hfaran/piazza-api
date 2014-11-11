@@ -319,8 +319,6 @@ class PiazzaRPC(object):
         self._check_authenticated()
 
         nid = nid if nid else self._nid
-        if nid is None:
-            raise NoNetworkIDError("No Network ID was provided for use.")
         if data is None:
             data = {}
 

@@ -159,11 +159,12 @@ class Network(object):
         :type offset: int
         :param offset: Offset starting from bottom of feed
         :type sort: str
-        :rtype: list
-        :returns: List of posts in feed format; this means they are not the
-            full posts but only in partial form as necessary to display them
-            on the Piazza feed. For example, the returned dicts only
-            have content snippets of posts rather than the full text.
+        :rtype: dict
+        :returns: Feed metadata, including list of posts in feed format; this
+            means they are not the full posts but only in partial form as
+            necessary to display them on the Piazza feed. For example, the
+            returned dicts only have content snippets of posts rather
+            than the full text.
         """
         return self._rpc.get_my_feed(limit=limit, offset=offset)
 
@@ -173,7 +174,7 @@ class Network(object):
         :type feed_filter: FeedFilter
         :param feed_filter: Must be an instance of either: UnreadFilter,
             FollowingFilter, or FolderFilter
-        :rtype: list
+        :rtype: dict
         """
         assert isinstance(feed_filter, (UnreadFilter, FollowingFilter,
                                         FolderFilter))
@@ -185,7 +186,7 @@ class Network(object):
         :type query: str
         :param query: The search query; should just be keywords for posts
             that you are looking for
-        :rtype: list
+        :rtype: dict
         """
         return self._rpc.search(query=query)
 
