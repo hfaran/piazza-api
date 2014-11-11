@@ -8,3 +8,7 @@ class AuthenticationError(Exception):
 
 class NotAuthenticatedError(Exception):
     """NotAuthenticatedError"""
+
+
+class NoNetworkIDError(Exception):
+    """No Network ID (nid) provided"""
