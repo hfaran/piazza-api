@@ -65,8 +65,8 @@ sudo python setup.py install
 
 ## Contribute
 
-* Issue Tracker: github.com/hfaran/piazza-api/issues
-* Source Code: github.com/hfaran/piazza-api
+* [Issue Tracker](https://github.com/hfaran/piazza-api/issues)
+* [Source Code](github.com/hfaran/piazza-api)
 
 
 ## License
