@@ -2,18 +2,8 @@
 
 Unofficial Client for Piazza's Internal API
 
-## Setup
 
-```bash
-git clone https://github.com/hfaran/piazza-api
-cd piazza-api
-sudo python setup.py install
-```
-
-## Examples
-
-Some examples to get started; more in the documentation (which is coming soon; 
-but the code is all Sphinx style documented and is fairly readable).
+## Usage
 
 ```python
 >>> from piazza_api import Piazza
@@ -21,16 +11,24 @@ but the code is all Sphinx style documented and is fairly readable).
 >>> p.user_login()
 Email: ...
 Password: ...
+
 >>> user_profile = p.get_user_profile()
+
 >>> eece210 = p.network("hl5qm84dl4t3x2")
+
 >>> eece210.get_post(100)
 ...
+
 >>> posts = eece210.iter_all_posts(limit=10)
 >>> for post in posts:
 ...     do_awesome_thing(post)
+
 >>> users = eece210.get_users(["userid1", "userid2"])
 >>> all_users = eece210.get_all_users()
 ```
+
+Above are some examples to get started; more in the documentation (which is coming soon; 
+but the code is all Sphinx-style documented and is fairly readable).
 
 You can also use the "internal" PiazzaRPC class which maps more directly
 to Piazza's API itself but is not as nice and as intuitive to use as the
@@ -47,6 +45,34 @@ Password: ...
 >>> p.add_students(["student@example.com", "anotherStudent@example.com"])
 ...
 ```
+
+
+## Installation
+
+You've seen this before and you'll see it again.
+
+```bash
+# The easy way
+sudo pip install piazza-api
+```
+
+```bash
+# The developer way
+git clone https://github.com/hfaran/piazza-api
+cd piazza-api
+sudo python setup.py install
+```
+
+## Contribute
+
+* Issue Tracker: github.com/hfaran/piazza-api/issues
+* Source Code: github.com/hfaran/piazza-api
+
+
+## License
+
+This project is licensed under the MIT License.
+
 
 ## Disclaimer
 
