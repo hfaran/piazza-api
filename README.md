@@ -47,3 +47,9 @@ Password: ...
 >>> p.add_students(["student@example.com", "anotherStudent@example.com"])
 ...
 ```
+
+## Disclaimer
+
+This is not an official API. I am not affiliated with Piazza Technologies Inc. 
+in any way, and am not responsible for any damage that could be done with it. 
+Use it at your own risk.
