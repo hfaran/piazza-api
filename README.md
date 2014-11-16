@@ -1,5 +1,7 @@
 # piazza-api
 
+[![PyPI version](https://badge.fury.io/py/piazza-api.png)](http://badge.fury.io/py/piazza-api)
+
 Unofficial Client for Piazza's Internal API
 
 
