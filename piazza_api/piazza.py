@@ -53,5 +53,23 @@ class Piazza(object):
         """
         return self._rpc_api.get_user_profile()
 
+    def get_user_classes(self):
+        """Get list of the current user's classes. This is a subset of
+        ``get_user_profile``.
+
+        :returns: Classes of currently authenticated user
+        :rtype: list
+        """
+        raw_classes = self.get_user_profile().get('all_classes').values()
+
+        classes = []
+        for rawc in raw_classes:
+            c = {k: rawc[k] for k in ['name', 'num', 'term']}
+            c['nid'] = rawc['id']
+            c['is_ta'] = rawc.get('is_ta', False)
+            classes.append(c)
+
+        return classes
+
     def _ensure_authenticated(self):
         self._rpc_api._check_authenticated()
