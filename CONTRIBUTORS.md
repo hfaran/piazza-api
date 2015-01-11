@@ -17,3 +17,4 @@
 * Ben Cook [@blx](github.com/blx)
     * Get users
     * `PiazzaRPC.request`
+    * [`Piazza.get_user_classes`](https://github.com/hfaran/piazza-api/pull/22)
