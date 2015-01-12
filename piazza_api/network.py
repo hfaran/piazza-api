@@ -113,8 +113,8 @@ class Network(object):
         """Get a listing of data for specific users ``user_ids`` in
         this network
 
-        :type  user_ids: list of str
-        :param user_ids: a list of user ids. These are the same
+        :type  user_ids: list
+        :param user_ids: A list of user ids (strings). These are the same
             ids that are returned by get_all_users.
         :returns: Python object containing returned data, a list
             of dicts containing user data.
