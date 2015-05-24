@@ -96,6 +96,22 @@ class PiazzaRPC(object):
         )
         return self._handle_error(r, "Could not get post {}.".format(cid))
 
+    def content_create(self, params):
+        """Create a post or followup.
+
+        :type  params: dict
+        :param params: A dict of options to pass to the endpoint. Depends on
+            the specific type of content being created.
+        :returns: Python object containing returned data
+        """
+        r = self.request(
+            method="content.create",
+            # blank.
+            data=params
+        )
+        return self._handle_error(r, "Could not create object {}.".format(
+                                     repr(params)))
+
     def add_students(self, student_emails, nid=None):
         """Enroll students in a network `nid`.
 
