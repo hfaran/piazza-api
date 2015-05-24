@@ -114,7 +114,7 @@ class Network(object):
 
         :type  post: dict|str|int
         :param post: Either the post dict returned by another API method, or
-            the cid` field of that post.
+            the `cid` field of that post.
         :type  subject: str
         :param content: The content of the followup.
         :type  anonymous: bool

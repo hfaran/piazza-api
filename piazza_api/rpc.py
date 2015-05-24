@@ -106,7 +106,6 @@ class PiazzaRPC(object):
         """
         r = self.request(
             method="content.create",
-            # blank.
             data=params
         )
         return self._handle_error(r, "Could not create object {}.".format(
