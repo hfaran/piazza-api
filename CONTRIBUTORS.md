@@ -4,16 +4,20 @@
 
 ## Creator & Maintainer
 
-* Hamza Faran [@hfaran](github.com/hfaran)
+* Hamza Faran [@hfaran](https://github.com/hfaran)
 
 
 ## Contributors
 
-* Philip Mallory [@pmallory](github.com/pmallory)
+* Philip Mallory [@pmallory](https://github.com/pmallory)
     * Enroll users
     * Get all users
     * Remove users
 
-* Ben Cook [@blx](github.com/blx)
+* Ben Cook [@blx](https://github.com/blx)
     * Get users
     * `PiazzaRPC.request`
+    * [`Piazza.get_user_classes`](https://github.com/hfaran/piazza-api/pull/22)
+
+* Waleed Khan [@arxanas](https://github.com/arxanas)
+    - [`Network.create_followup`](https://github.com/hfaran/piazza-api/pull/25)

@@ -105,6 +105,40 @@ class Network(object):
         for cid in cids:
             yield self.get_post(cid)
 
+    def create_followup(self, post, content, anonymous=False):
+        """Create a follow-up on a post `post`.
+
+        It seems like if the post has `<p>` tags, then it's treated as HTML,
+        but is treated as text otherwise. You'll want to provide `content`
+        accordingly.
+
+        :type  post: dict|str|int
+        :param post: Either the post dict returned by another API method, or
+            the `cid` field of that post.
+        :type  subject: str
+        :param content: The content of the followup.
+        :type  anonymous: bool
+        :param anonymous: Whether or not to post anonymously.
+        :rtype: dict
+        :returns: Dictionary with information about the created follow-up.
+        """
+        try:
+            cid = post["id"]
+        except KeyError:
+            cid = post
+
+        params = {
+            "cid": cid,
+            "type": "followup",
+
+            # For followups, the content is actually put into the subject.
+            "subject": content,
+            "content": "",
+
+            "anonymous": "yes" if anonymous else "no",
+        }
+        return self._rpc.content_create(params)
+
     #########
     # Users #
     #########
@@ -113,8 +147,8 @@ class Network(object):
         """Get a listing of data for specific users ``user_ids`` in
         this network
 
-        :type  user_ids: list of str
-        :param user_ids: a list of user ids. These are the same
+        :type  user_ids: list
+        :param user_ids: A list of user ids (strings). These are the same
             ids that are returned by get_all_users.
         :returns: Python object containing returned data, a list
             of dicts containing user data.
