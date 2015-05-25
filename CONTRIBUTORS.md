@@ -18,3 +18,6 @@
     * Get users
     * `PiazzaRPC.request`
     * [`Piazza.get_user_classes`](https://github.com/hfaran/piazza-api/pull/22)
+
+* Waleed Khan [@arxanas](https://github.com/arxanas)
+    - [`Network.create_followup`](https://github.com/hfaran/piazza-api/pull/25)
