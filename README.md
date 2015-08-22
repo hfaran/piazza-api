@@ -55,14 +55,14 @@ You've seen this before and you'll see it again.
 
 ```bash
 # The easy way
-sudo pip install piazza-api
+pip install piazza-api
 ```
 
 ```bash
 # The developer way
 git clone https://github.com/hfaran/piazza-api
 cd piazza-api
-sudo python setup.py install
+python setup.py develop
 ```
 
 ## Contribute
