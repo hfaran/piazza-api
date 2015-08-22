@@ -2,9 +2,8 @@ from __future__ import print_function
 
 import codecs
 import os
-from setuptools import setup, find_packages
-
-import piazza_api
+import re
+from setuptools import setup
 
 
 def read(filename):
@@ -13,13 +12,17 @@ def read(filename):
     return codecs.open(os.path.join(here, filename), 'r').read()
 
 
+# https://github.com/kennethreitz/requests/blob/master/setup.py#L32
+with open('piazza_api/__init__.py', 'r') as fd:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+                        fd.read(), re.MULTILINE).group(1)
 install_requires = read("requirements.txt").split()
 long_description = read('README.md')
 
 
 setup(
     name='piazza-api',
-    version=piazza_api.__version__,
+    version=version,
     url='http://github.com/hfaran/piazza-api/',
     license='MIT License',
     author='Hamza Faran',
