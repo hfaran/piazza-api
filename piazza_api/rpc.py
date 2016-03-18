@@ -111,6 +111,22 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Could not create object {}.".format(
                                      repr(params)))
 
+    def content_instructor_answer(self, params):
+        """Answer a post as an instructor.
+
+        :type  params: dict
+        :param params: A dict of options to pass to the endpoint. Depends on
+            the specific type of content being created.
+        :returns: Python object containing returned data
+        """
+        r = self.request(
+            method="content.answer",
+            data=params
+        )
+        return self._handle_error(r, "Could not create object {}.".format(
+                                     repr(params)))
+
+
     def add_students(self, student_emails, nid=None):
         """Enroll students in a network `nid`.
 
