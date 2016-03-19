@@ -21,3 +21,6 @@
 
 * Waleed Khan [@arxanas](https://github.com/arxanas)
     - [`Network.create_followup`](https://github.com/hfaran/piazza-api/pull/25)
+
+* [@DavidSnider](https://github.com/DavidSnider)
+    - [feat(user): Add answer-creating functionality](https://github.com/hfaran/piazza-api/pull/31)

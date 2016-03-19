@@ -139,6 +139,40 @@ class Network(object):
         }
         return self._rpc.content_create(params)
 
+    def create_instructor_answer(self, post, content, revision, anonymous=False):
+        """Create an instructor's answer to a post `post`.
+
+        It seems like if the post has `<p>` tags, then it's treated as HTML,
+        but is treated as text otherwise. You'll want to provide `content`
+        accordingly.
+
+        :type  post: dict|str|int
+        :param post: Either the post dict returned by another API method, or
+            the `cid` field of that post.
+        :type  content: str
+        :param content: The content of the answer.
+        :type  revision: int
+        :param revision: The number of revisions the answer has gone through.
+            The first responder should out 0, the first editor 1, etc.
+        :type  anonymous: bool
+        :param anonymous: Whether or not to post anonymously.
+        :rtype: dict
+        :returns: Dictionary with information about the created answer.
+        """
+        try:
+            cid = post["id"]
+        except KeyError:
+            cid = post
+
+        params = {
+            "cid": cid,
+            "type": "i_answer",
+            "content": content,
+            "revision": revision,
+            "anonymous": "yes" if anonymous else "no",
+        }
+        return self._rpc.content_instructor_answer(params)
+
     #########
     # Users #
     #########
