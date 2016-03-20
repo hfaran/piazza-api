@@ -1,1 +1,2 @@
 requests
+six==1.10.0

@@ -2,6 +2,7 @@ import getpass
 import json
 
 import requests
+import six.moves
 
 from piazza_api.exceptions import AuthenticationError, NotAuthenticatedError, \
     RequestError
@@ -38,7 +39,7 @@ class PiazzaRPC(object):
         :type  password: str
         :param password: The password used for authentication
         """
-        email = raw_input("Email: ") if email is None else email
+        email = six.moves.input("Email: ") if email is None else email
         password = getpass.getpass() if password is None else password
 
         login_data = {
