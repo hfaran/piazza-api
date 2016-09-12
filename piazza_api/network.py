@@ -173,6 +173,27 @@ class Network(object):
         }
         return self._rpc.content_instructor_answer(params)
 
+    def mark_as_duplicate(self, duplicated_cid, master_cid, msg=''):
+        """Mark the post at DUPLICATED_CID as a duplicate of MASTER_CID
+
+        :type  duplicated_cid: int
+        :param duplicated_cid: The numeric id of the duplicated post
+        :type  master_cid: int
+        :param master_cid: The numeric id of an older post. This will be the
+            post that gets kept and DUPLICATED_CID post will be concatinated
+            as a follow up to MASTER_CID post.
+        :returns True if it is successful. False otherwise
+        """
+        try:
+            content_id_from = self.get_post(duplicated_cid)['id']
+            content_id_to = self.get_post(master_cid)['id']
+        except:
+            return False
+        params = {'cid_dupe': content_id_from,
+                'cid_to': content_id_to,
+                'msg': msg}
+        return self._rpc.content_mark_duplicate(params) == 'OK'
+
     #########
     # Users #
     #########

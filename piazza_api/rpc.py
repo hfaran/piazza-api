@@ -127,6 +127,19 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Could not create object {}.".format(
                                      repr(params)))
 
+    def content_mark_duplicate(self, params):
+        """Mark a post as duplicate to another.
+
+        :type params: dict
+        :param params: the parameters to be passed in
+        :returns python object containting returned data
+        """
+        r = self.request(
+                method="content.duplicate",
+                data=params
+        )
+        return self._handle_error(r, "Could not create object {}.".format(
+                                     repr(params)))
 
     def add_students(self, student_emails, nid=None):
         """Enroll students in a network `nid`.
