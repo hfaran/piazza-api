@@ -109,8 +109,10 @@ class PiazzaRPC(object):
             method="content.create",
             data=params
         )
-        return self._handle_error(r, "Could not create object {}.".format(
-                                     repr(params)))
+        return self._handle_error(
+            r,
+            "Could not create object {}.".format(repr(params))
+        )
 
     def content_instructor_answer(self, params):
         """Answer a post as an instructor.
@@ -132,11 +134,10 @@ class PiazzaRPC(object):
 
         :type params: dict
         :param params: the parameters to be passed in
-        :returns python object containting returned data
         """
         r = self.request(
-                method="content.duplicate",
-                data=params
+            method="content.duplicate",
+            data=params
         )
         return self._handle_error(r, "Could not create object {}.".format(
                                      repr(params)))
