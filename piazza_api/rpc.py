@@ -367,14 +367,19 @@ class PiazzaRPC(object):
         nid = nid if nid else self._nid
         if data is None:
             data = {}
-
+        
+        headers = {}
+        if "session_id" in self.cookies:
+            headers['CSRF-Token'] = self.cookies["session_id"]
+        
         response = requests.post(
             self.base_api_urls[api_type],
             data=json.dumps({
                 "method": method,
                 "params": dict({nid_key: nid}, **data)
             }),
-            cookies=self.cookies
+            cookies=self.cookies,
+            headers = headers
         )
         return response if return_response else response.json()
 
