@@ -379,7 +379,7 @@ class PiazzaRPC(object):
                 "params": dict({nid_key: nid}, **data)
             }),
             cookies=self.cookies,
-            headers = headers
+            headers=headers
         )
         return response if return_response else response.json()
 
