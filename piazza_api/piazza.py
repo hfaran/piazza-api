@@ -52,6 +52,16 @@ class Piazza(object):
         :rtype: dict
         """
         return self._rpc_api.get_user_profile()
+    
+    def get_user_status(self):
+        """
+        Get global status of the current user, which contains information on
+        the relationship of the user with respect to all their enrolled classes.
+
+        :returns: Status of currently authenticated user
+        :rtype: dict
+        """
+        return self._rpc_api.get_user_status()
 
     def get_user_classes(self):
         """Get list of the current user's classes. This is a subset of
