@@ -43,7 +43,7 @@ class Piazza(object):
             https://piazza.com/class/{network_id}
         """
         self._ensure_authenticated()
-        return Network(network_id, self._rpc_api.cookies)
+        return Network(network_id, self._rpc_api.session)
 
     def get_user_profile(self):
         """Get profile of the current user
