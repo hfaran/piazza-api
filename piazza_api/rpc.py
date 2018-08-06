@@ -7,6 +7,8 @@ import six.moves
 from piazza_api.exceptions import AuthenticationError, NotAuthenticatedError, \
     RequestError
 
+from piazza_api.nonce import nonce as _piazza_nonce
+
 
 class PiazzaRPC(object):
     """Unofficial Client for Piazza's Internal API
@@ -371,9 +373,17 @@ class PiazzaRPC(object):
         headers = {}
         if "session_id" in self.cookies:
             headers["CSRF-Token"] = self.cookies["session_id"]
+        
+        # Adding a nonce to the request
+        endpoint = self.base_api_urls[api_type]
+        if api_type == "logic":
+            endpoint += "?method={}&aid={}".format(
+                method,
+                _piazza_nonce()
+            )
 
         response = requests.post(
-            self.base_api_urls[api_type],
+            endpoint,
             data=json.dumps({
                 "method": method,
                 "params": dict({nid_key: nid}, **data)

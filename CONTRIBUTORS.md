@@ -9,18 +9,21 @@
 
 ## Contributors
 
-* Philip Mallory [@pmallory](https://github.com/pmallory)
-    * Enroll users
-    * Get all users
-    * Remove users
-
 * Ben Cook [@blx](https://github.com/blx)
     * Get users
     * `PiazzaRPC.request`
     * [`Piazza.get_user_classes`](https://github.com/hfaran/piazza-api/pull/22)
 
 * Waleed Khan [@arxanas](https://github.com/arxanas)
-    - [`Network.create_followup`](https://github.com/hfaran/piazza-api/pull/25)
+    * [`Network.create_followup`](https://github.com/hfaran/piazza-api/pull/25)
+
+* Jérémie Lumbroso [@jlumbroso](https://github.com/jlumbroso)
+    * Support for nonces (`aid`)
+
+* Philip Mallory [@pmallory](https://github.com/pmallory)
+    * Enroll users
+    * Get all users
+    * Remove users
 
 * David Snider [@DavidSnider](https://github.com/DavidSnider)
-    - [feat(user): Add answer-creating functionality](https://github.com/hfaran/piazza-api/pull/31)
+    * [feat(user): Add answer-creating functionality](https://github.com/hfaran/piazza-api/pull/31)
