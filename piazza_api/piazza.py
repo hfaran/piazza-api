@@ -64,8 +64,8 @@ class Piazza(object):
         return self._rpc_api.get_user_status()
 
     def get_user_classes(self):
-        """Get list of the current user's classes. This is a subset of
-        ``get_user_status``.
+        """Get list of the current user's classes. This is a subset of the
+        information returned by the call to ``get_user_status``.
 
         :returns: Classes of currently authenticated user
         :rtype: list

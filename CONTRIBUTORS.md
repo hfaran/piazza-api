@@ -19,6 +19,7 @@
 
 * Jérémie Lumbroso [@jlumbroso](https://github.com/jlumbroso)
     * Support for nonces (`aid`)
+    * Added ``get_user_status`` and fixed retrieval of user classes (``get_user_classes``).
 
 * Philip Mallory [@pmallory](https://github.com/pmallory)
     * Enroll users
