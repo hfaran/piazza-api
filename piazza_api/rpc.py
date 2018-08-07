@@ -7,6 +7,8 @@ import six.moves
 from piazza_api.exceptions import AuthenticationError, NotAuthenticatedError, \
     RequestError
 
+from piazza_api.nonce import nonce as _piazza_nonce
+
 
 class PiazzaRPC(object):
     """Unofficial Client for Piazza's Internal API
@@ -341,6 +343,14 @@ class PiazzaRPC(object):
         r = self.request(method="user_profile.get_profile")
         return self._handle_error(r, "Could not get user profile.")
 
+    def get_user_status(self):
+        """
+        Get global status of the current user, which contains information on
+        the relationship of the user with respect to all their enrolled classes.
+        """
+        r = self.request(method="user.status")
+        return self._handle_error(r, "Could not get user status.")
+
     def request(self, method, data=None, nid=None, nid_key='nid',
                 api_type="logic", return_response=False):
         """Get data from arbitrary Piazza API endpoint `method` in network `nid`
@@ -371,9 +381,17 @@ class PiazzaRPC(object):
         headers = {}
         if "session_id" in self.cookies:
             headers["CSRF-Token"] = self.cookies["session_id"]
+        
+        # Adding a nonce to the request
+        endpoint = self.base_api_urls[api_type]
+        if api_type == "logic":
+            endpoint += "?method={}&aid={}".format(
+                method,
+                _piazza_nonce()
+            )
 
         response = requests.post(
-            self.base_api_urls[api_type],
+            endpoint,
             data=json.dumps({
                 "method": method,
                 "params": dict({nid_key: nid}, **data)

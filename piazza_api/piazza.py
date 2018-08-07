@@ -52,19 +52,34 @@ class Piazza(object):
         :rtype: dict
         """
         return self._rpc_api.get_user_profile()
+    
+    def get_user_status(self):
+        """
+        Get global status of the current user, which contains information on
+        the relationship of the user with respect to all their enrolled classes.
+
+        :returns: Status of currently authenticated user
+        :rtype: dict
+        """
+        return self._rpc_api.get_user_status()
 
     def get_user_classes(self):
-        """Get list of the current user's classes. This is a subset of
-        ``get_user_profile``.
+        """Get list of the current user's classes. This is a subset of the
+        information returned by the call to ``get_user_status``.
 
         :returns: Classes of currently authenticated user
         :rtype: list
         """
-        raw_classes = self.get_user_profile().get('all_classes').values()
+        # Previously getting classes from profile (such a list is incomplete)
+        # raw_classes = self.get_user_profile().get('all_classes').values()
+
+        # Get classes from the user status (includes all classes)
+        raw_classes = self.get_user_status().get('networks', [])
 
         classes = []
         for rawc in raw_classes:
-            c = {k: rawc[k] for k in ['name', 'num', 'term']}
+            c = {k: rawc[k] for k in ['name', 'term']}
+            c['num'] = rawr.get('course_number', '')
             c['nid'] = rawc['id']
             c['is_ta'] = rawc.get('is_ta', False)
             classes.append(c)
