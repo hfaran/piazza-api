@@ -79,7 +79,7 @@ class Piazza(object):
         classes = []
         for rawc in raw_classes:
             c = {k: rawc[k] for k in ['name', 'term']}
-            c['num'] = rawr.get('course_number', '')
+            c['num'] = rawc.get('course_number', '')
             c['nid'] = rawc['id']
             c['is_ta'] = rawc.get('is_ta', False)
             classes.append(c)
