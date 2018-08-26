@@ -195,6 +195,37 @@ class Network(object):
         }
         return self._rpc.content_mark_duplicate(params)
 
+    def resolve(self, post):
+        try:
+            cid = post["id"]
+        except KeyError:
+            cid = post
+
+        params = {
+            "cid": cid,
+            "resolved": "true"
+        }
+
+        return self._rpc.content_mark_resolved(params)
+
+    def pin(self, post):
+        """
+        Usage
+        post = my_class.create_post('note', ['other'], 'subject', 'content')
+        my_class.pin(post)
+        """
+        
+        try:
+            cid = post['id']
+        except KeyError:
+            cid = post
+
+        params = {
+            "cid": cid,
+        }
+
+        return self._rpc.content_pin(params)
+
     #########
     # Users #
     #########
