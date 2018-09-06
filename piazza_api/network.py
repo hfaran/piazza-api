@@ -47,12 +47,13 @@ class Network(object):
     """Abstraction for a Piazza "Network" (or class)
 
     :param network_id: ID of the network
-    :param cookies: RequestsCookieJar containing cookies used for authentication
+    :param session: requests.Session object containing cookies used for
+        authentication
     """
-    def __init__(self, network_id, cookies):
+    def __init__(self, network_id, session):
         self._nid = network_id
         self._rpc = PiazzaRPC(network_id=self._nid)
-        self._rpc.cookies = cookies
+        self._rpc.session = session
 
         ff = namedtuple('FeedFilters', ['unread', 'following', 'folder'])
         self._feed_filters = ff(UnreadFilter, FollowingFilter, FolderFilter)
