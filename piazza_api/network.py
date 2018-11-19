@@ -105,6 +105,44 @@ class Network(object):
         for cid in cids:
             yield self.get_post(cid)
 
+    def create_post(self, post_type, post_folders, post_subject, post_content, is_announcement=0, bypass_email=0, anonymous=False):
+        """Create a post
+
+        It seems like if the post has `<p>` tags, then it's treated as HTML,
+        but is treated as text otherwise. You'll want to provide `content`
+        accordingly.
+
+        :type post_type: str
+        :param post_type: 'note', 'question'
+        :type post_folders: str
+        :param post_folders: Folder to put post into
+        :type post_subject: str
+        :param post_subject: Subject string
+        :type post_content: str
+        :param post_content: Content string
+        :type is_announcement: bool
+        :param is_announcement:
+        :type bypass_email: bool
+        :param bypass_email:
+        :type anonymous: bool
+        :param anonymous:
+        :rtype: dict
+        :returns: Dictionary with information about the created post.
+        """
+        params = {
+            "anonymous": "yes" if anonymous else "no",
+            "subject": post_subject,
+            "content": post_content,
+            "folders": post_folders,
+            "type": post_type,
+            "config": {
+                "bypass_email": bypass_email,
+                "is_announcement": is_announcement
+            }
+        }
+
+        return self._rpc.content_create(params)
+
     def create_followup(self, post, content, anonymous=False):
         """Create a follow-up on a post `post`.
 
@@ -115,7 +153,7 @@ class Network(object):
         :type  post: dict|str|int
         :param post: Either the post dict returned by another API method, or
             the `cid` field of that post.
-        :type  subject: str
+        :type  content: str
         :param content: The content of the followup.
         :type  anonymous: bool
         :param anonymous: Whether or not to post anonymously.
@@ -172,6 +210,38 @@ class Network(object):
             "anonymous": "yes" if anonymous else "no",
         }
         return self._rpc.content_instructor_answer(params)
+
+    def create_reply(self, post, content, anonymous=False):
+        """Create a reply to a followup
+        It seems like if the post has `<p>` tags, then it's treated as HTML,
+        but is treated as text otherwise. You'll want to provide `content`
+        accordingly.
+        :type  post: dict|str|int
+        :param post: Either the post dict returned by another API method, or
+            the `cid` field of that post.
+        :type  subject: str
+        :param content: The content of the followup.
+        :type  anonymous: bool
+        :param anonymous: Whether or not to post anonymously.
+        :rtype: dict
+        :returns: Dictionary with information about the created follow-up.
+        """
+        try:
+            cid = post["id"]
+        except KeyError:
+            cid = post
+
+        params = {
+            "cid": cid,
+            "type": "feedback",
+
+            # For replies, the content is actually put into the subject.
+            "subject": content,
+            "content": "",
+
+            "anonymous": "yes" if anonymous else "no",
+        }
+        return self._rpc.content_create(params)
 
     def mark_as_duplicate(self, duplicated_cid, master_cid, msg=''):
         """Mark the post at ``duplicated_cid`` as a duplicate of ``master_cid``

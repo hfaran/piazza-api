@@ -145,6 +145,11 @@ class PiazzaRPC(object):
                                      repr(params)))
 
     def content_mark_resolved(self, params):
+        """Mark a post as resolved
+
+        :type params: dict
+        :param params: the parameters to be passed in
+        """
         r = self.request(
             method="content.mark_resolved",
             data=params
@@ -153,6 +158,11 @@ class PiazzaRPC(object):
                                      repr(params)))
 
     def content_pin(self, params):
+        """Pin a post
+
+        :type params: dict
+        :param params: the parameters to be passed in
+        """
         r = self.request(
             method="content.pin",
             data=params
