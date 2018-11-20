@@ -265,6 +265,30 @@ class Network(object):
         """
         return self._rpc.remove_users(user_ids=user_ids)
 
+    def delete_post(self, post):
+        """ Deletes post by cid
+
+        :type  post: dict|str|int
+        :param post: Either the post dict returned by another API method, the post ID, or
+            the `cid` field of that post.
+        :rtype: dict
+        :returns: Dictionary with information about the post cid.
+        """
+
+        try:
+            cid = post['id']
+        except KeyError:
+            cid = post
+        except TypeError:
+            post = self.get_post(post)
+            cid = post['id']
+
+        params = {
+            "cid": cid,
+        }
+
+        return self._rpc.content_delete(params)
+
     ########
     # Feed #
     ########
