@@ -70,26 +70,6 @@ python setup.py develop
 * [Issue Tracker](https://github.com/hfaran/piazza-api/issues)
 * [Source Code](https://github.com/hfaran/piazza-api)
 
-### Commit Message Guidelines
-
-Commit messages should be written with the following style: `%{type}(%{scope}): %{description}`.
-
-* Valid `type`s are
-  - `feat`
-  - `fix`
-  - `docs`
-  - `style`
-  - `refactor`
-  - `perf`
-  - `test`
-  - `revert`
-
-* Valid `scope`s are
-  - `dev` (if the change is irrevelant to the user or otherwise has no impact on the top-level API and only to developers)
-  - `user` (if this commit is a change that affects the top-level user-facing interface)
-
-* `description` is the actual commit message 
-
 
 ## License
 
