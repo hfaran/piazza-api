@@ -31,7 +31,7 @@ class PiazzaRPC(object):
             "logic": "https://piazza.com/logic/api",
             "main": "https://piazza.com/main/api",
         }
-        self.cookies = None
+        self.session = requests.Session()
 
     def user_login(self, email=None, password=None):
         """Login with email, password and get back a session cookie
@@ -51,14 +51,13 @@ class PiazzaRPC(object):
         }
         # If the user/password match, the server respond will contain a
         #  session cookie that you can use to authenticate future requests.
-        r = requests.post(
+        r = self.session.post(
             self.base_api_urls["logic"],
             data=json.dumps(login_data),
         )
         if r.json()["result"] not in ["OK"]:
             raise AuthenticationError("Could not authenticate.\n{}"
                                       .format(r.json()))
-        self.cookies = r.cookies
 
     def demo_login(self, auth=None, url=None):
         """Authenticate with a "Share Your Class" URL using a demo user.
@@ -76,10 +75,9 @@ class PiazzaRPC(object):
         if url is None:
             url = "https://piazza.com/demo_login"
             params = dict(nid=self._nid, auth=auth)
-            res = requests.get(url, params=params)
+            res = self.session.get(url, params=params)
         else:
-            res = requests.get(url)
-        self.cookies = res.cookies
+            res = self.session.get(url)
 
     def content_get(self, cid, nid=None):
         """Get data from post `cid` in network `nid`
@@ -146,7 +144,6 @@ class PiazzaRPC(object):
 
     def content_mark_resolved(self, params):
         """Mark a post as resolved
-
         :type params: dict
         :param params: the parameters to be passed in
         """
@@ -169,6 +166,15 @@ class PiazzaRPC(object):
         )
         return self._handle_error(r, "Could not create object {}.".format(
                                      repr(params)))   
+
+    def content_delete(self, params):
+        """Deletes a post.
+            method="content.delete",
+            data=params
+        )
+        return self._handle_error(r, "Could not create object {}.".format(
+            repr(params)))
+
 
     def add_students(self, student_emails, nid=None):
         """Enroll students in a network `nid`.
@@ -405,9 +411,9 @@ class PiazzaRPC(object):
             data = {}
 
         headers = {}
-        if "session_id" in self.cookies:
-            headers["CSRF-Token"] = self.cookies["session_id"]
-        
+        if "session_id" in self.session.cookies:
+            headers["CSRF-Token"] = self.session.cookies["session_id"]
+
         # Adding a nonce to the request
         endpoint = self.base_api_urls[api_type]
         if api_type == "logic":
@@ -416,13 +422,12 @@ class PiazzaRPC(object):
                 _piazza_nonce()
             )
 
-        response = requests.post(
+        response = self.session.post(
             endpoint,
             data=json.dumps({
                 "method": method,
                 "params": dict({nid_key: nid}, **data)
             }),
-            cookies=self.cookies,
             headers=headers
         )
         return response if return_response else response.json()
@@ -436,7 +441,7 @@ class PiazzaRPC(object):
 
         :raises: NotAuthenticatedError
         """
-        if self.cookies is None:
+        if not self.session.cookies:
             raise NotAuthenticatedError("You must authenticate before "
                                         "making any other requests.")
 

@@ -43,7 +43,7 @@ class Piazza(object):
             https://piazza.com/class/{network_id}
         """
         self._ensure_authenticated()
-        return Network(network_id, self._rpc_api.cookies)
+        return Network(network_id, self._rpc_api.session)
 
     def get_user_profile(self):
         """Get profile of the current user
@@ -74,14 +74,16 @@ class Piazza(object):
         # raw_classes = self.get_user_profile().get('all_classes').values()
 
         # Get classes from the user status (includes all classes)
-        raw_classes = self.get_user_status().get('networks', [])
+        status = self.get_user_status()
+        uid = status['id']
+        raw_classes = status.get('networks', [])
 
         classes = []
         for rawc in raw_classes:
             c = {k: rawc[k] for k in ['name', 'term']}
             c['num'] = rawc.get('course_number', '')
             c['nid'] = rawc['id']
-            c['is_ta'] = rawc.get('is_ta', False)
+            c['is_ta'] = uid in rawc['prof_hash']
             classes.append(c)
 
         return classes

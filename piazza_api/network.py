@@ -47,12 +47,13 @@ class Network(object):
     """Abstraction for a Piazza "Network" (or class)
 
     :param network_id: ID of the network
-    :param cookies: RequestsCookieJar containing cookies used for authentication
+    :param session: requests.Session object containing cookies used for
+        authentication
     """
-    def __init__(self, network_id, cookies):
+    def __init__(self, network_id, session):
         self._nid = network_id
         self._rpc = PiazzaRPC(network_id=self._nid)
-        self._rpc.cookies = cookies
+        self._rpc.session = session
 
         ff = namedtuple('FeedFilters', ['unread', 'following', 'folder'])
         self._feed_filters = ff(UnreadFilter, FollowingFilter, FolderFilter)
@@ -364,6 +365,30 @@ class Network(object):
             the network after users are removed.
         """
         return self._rpc.remove_users(user_ids=user_ids)
+
+    def delete_post(self, post):
+        """ Deletes post by cid
+
+        :type  post: dict|str|int
+        :param post: Either the post dict returned by another API method, the post ID, or
+            the `cid` field of that post.
+        :rtype: dict
+        :returns: Dictionary with information about the post cid.
+        """
+
+        try:
+            cid = post['id']
+        except KeyError:
+            cid = post
+        except TypeError:
+            post = self.get_post(post)
+            cid = post['id']
+
+        params = {
+            "cid": cid,
+        }
+
+        return self._rpc.content_delete(params)
 
     ########
     # Feed #
