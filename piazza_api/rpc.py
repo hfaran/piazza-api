@@ -142,6 +142,32 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Could not create object {}.".format(
                                      repr(params)))
 
+    def content_mark_resolved(self, params):
+        """Mark a post as resolved
+
+        :type params: dict
+        :param params: the parameters to be passed in
+        """
+        r = self.request(
+            method="content.mark_resolved",
+            data=params
+        )
+        return self._handle_error(r, "Could not create object {}.".format(
+                                     repr(params)))
+
+    def content_pin(self, params):
+        """Pin a post
+
+        :type params: dict
+        :param params: the parameters to be passed in
+        """
+        r = self.request(
+            method="content.pin",
+            data=params
+        )
+        return self._handle_error(r, "Could not create object {}.".format(
+                                     repr(params)))   
+
     def content_delete(self, params):
         """Deletes a post.
 
@@ -154,6 +180,7 @@ class PiazzaRPC(object):
         )
         return self._handle_error(r, "Could not create object {}.".format(
             repr(params)))
+
 
     def add_students(self, student_emails, nid=None):
         """Enroll students in a network `nid`.
