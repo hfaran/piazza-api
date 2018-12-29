@@ -167,8 +167,12 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Could not create object {}.".format(
                                      repr(params)))   
 
-    def content_delete(self, params):
+   def content_delete(self, params):
         """Deletes a post.
+        :type params: dict
+        :param params: the parameters to be passed in
+        """
+        r = self.request(
             method="content.delete",
             data=params
         )
