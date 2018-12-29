@@ -29,6 +29,7 @@ setup(
     install_requires=install_requires,
     description="Unofficial Client for Piazza's Internal API",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=['piazza_api'],
     platforms='any',
     classifiers = [
