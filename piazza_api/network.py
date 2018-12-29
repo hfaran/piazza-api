@@ -266,7 +266,14 @@ class Network(object):
         }
         return self._rpc.content_mark_duplicate(params)
 
-    def resolve(self, post):
+    def resolve_post(self, post):
+        """Mark post as resolved
+
+        :type  post: dict|str|int
+        :param post: Either the post dict returned by another API method, or
+            the `cid` field of that post.
+        :returns: True if it is successful. False otherwise
+        """
         try:
             cid = post["id"]
         except KeyError:
@@ -279,13 +286,14 @@ class Network(object):
 
         return self._rpc.content_mark_resolved(params)
 
-    def pin(self, post):
+    def pin_post(self, post):
+        """Pin post
+
+        :type  post: dict|str|int
+        :param post: Either the post dict returned by another API method, or
+            the `cid` field of that post.
+        :returns: True if it is successful. False otherwise
         """
-        Usage
-        post = my_class.create_post('note', ['other'], 'subject', 'content')
-        my_class.pin(post)
-        """
-        
         try:
             cid = post['id']
         except KeyError:

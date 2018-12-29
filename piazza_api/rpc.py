@@ -144,6 +144,7 @@ class PiazzaRPC(object):
 
     def content_mark_resolved(self, params):
         """Mark a post as resolved
+
         :type params: dict
         :param params: the parameters to be passed in
         """
@@ -167,8 +168,9 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Could not create object {}.".format(
                                      repr(params)))   
 
-   def content_delete(self, params):
+    def content_delete(self, params):
         """Deletes a post.
+
         :type params: dict
         :param params: the parameters to be passed in
         """
