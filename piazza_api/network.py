@@ -214,6 +214,7 @@ class Network(object):
 
     def create_reply(self, post, content, anonymous=False):
         """Create a reply to a followup
+
         It seems like if the post has `<p>` tags, then it's treated as HTML,
         but is treated as text otherwise. You'll want to provide `content`
         accordingly.
