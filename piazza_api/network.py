@@ -245,6 +245,31 @@ class Network(object):
         }
         return self._rpc.content_create(params)
 
+    def update_post(self, post, content):
+        """Update post content by cid
+
+        :type  post: dict|str|int
+        :param post: Either the post dict returned by another API method, or
+            the `cid` field of that post.
+        :type  subject: str
+        :param content: The content of the followup.
+        :rtype: dict
+        :returns: Dictionary with information about the updated post.
+        """
+        try:
+            cid = post["id"]
+        except KeyError:
+            cid = post
+        except TypeError:
+            cid = post
+
+        params = {
+            "cid": cid,
+            # For updates, the content is put into the subject.
+            "subject": content,
+        }
+        return self._rpc.content_update(params)
+
     def mark_as_duplicate(self, duplicated_cid, master_cid, msg=''):
         """Mark the post at ``duplicated_cid`` as a duplicate of ``master_cid``
 
@@ -305,6 +330,30 @@ class Network(object):
         }
 
         return self._rpc.content_pin(params)
+
+    def delete_post(self, post):
+        """ Deletes post by cid
+
+        :type  post: dict|str|int
+        :param post: Either the post dict returned by another API method, the post ID, or
+            the `cid` field of that post.
+        :rtype: dict
+        :returns: Dictionary with information about the post cid.
+        """
+
+        try:
+            cid = post['id']
+        except KeyError:
+            cid = post
+        except TypeError:
+            post = self.get_post(post)
+            cid = post['id']
+
+        params = {
+            "cid": cid,
+        }
+
+        return self._rpc.content_delete(params)
 
     #########
     # Users #
@@ -374,30 +423,6 @@ class Network(object):
             the network after users are removed.
         """
         return self._rpc.remove_users(user_ids=user_ids)
-
-    def delete_post(self, post):
-        """ Deletes post by cid
-
-        :type  post: dict|str|int
-        :param post: Either the post dict returned by another API method, the post ID, or
-            the `cid` field of that post.
-        :rtype: dict
-        :returns: Dictionary with information about the post cid.
-        """
-
-        try:
-            cid = post['id']
-        except KeyError:
-            cid = post
-        except TypeError:
-            post = self.get_post(post)
-            cid = post['id']
-
-        params = {
-            "cid": cid,
-        }
-
-        return self._rpc.content_delete(params)
 
     ########
     # Feed #
