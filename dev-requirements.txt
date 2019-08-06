@@ -1,1 +1,3 @@
 readme_renderer[md]
+twine
+wheel
