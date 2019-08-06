@@ -260,10 +260,11 @@ class Network(object):
             cid = post["id"]
         except KeyError:
             cid = post
+        except TypeError:
+            cid = post
 
         params = {
             "cid": cid,
-
             # For updates, the content is put into the subject.
             "subject": content,
         }
