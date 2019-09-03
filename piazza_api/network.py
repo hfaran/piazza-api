@@ -142,6 +142,9 @@ class Network(object):
             }
         }
 
+        if bypass_email:
+            params["prof_override"] = True
+
         return self._rpc.content_create(params)
 
     def create_followup(self, post, content, anonymous=False):
