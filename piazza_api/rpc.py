@@ -92,7 +92,7 @@ class PiazzaRPC(object):
         """
         r = self.request(
             method="content.get",
-            data={"cid": cid},
+            data={"cid": cid, "student_view": "false"},
             nid=nid
         )
         return self._handle_error(r, "Could not get post {}.".format(cid))
