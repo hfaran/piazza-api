@@ -147,17 +147,16 @@ class PiazzaRPC(object):
                                      repr(params)))
 
 
-    def content_update_student_answer(self, cid, content, revision, anon=False):
-        """Updates existing student answer.
+    def content_student_answer(self, cid, content, revision=1, anon=False):
+        """Answer question as student or update existing student answer.
         
         :type cid: str
         :type content: str
         :type revision: int
         :type anon: bool
-        :param cid: The content ID of the answer to update. This must be the cid for the
-            answer itself, not the parent post. 
-        :param content: The updated content
-        :param revision: Revision number. Must be greater than edit history length of the answer
+        :param cid: The ID of the post to answer.  
+        :param content: The answer content. 
+        :param revision: Revision number. Must be greater than history_size of the student answer. 
         :param anon: Whether or not this action should be performed as an anonymous user.
         :returns: Python object containing returned data
         """
