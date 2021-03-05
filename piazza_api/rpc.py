@@ -146,6 +146,34 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Could not create object {}.".format(
                                      repr(params)))
 
+
+    def content_student_answer(self, cid, content, revision=1, anon=False):
+        """Answer question as student or update existing student answer.
+        
+        :type cid: str
+        :type content: str
+        :type revision: int
+        :type anon: bool
+        :param cid: The ID of the post to answer.  
+        :param content: The answer content. 
+        :param revision: Revision number. Must be greater than history_size of the student answer. 
+        :param anon: Whether or not this action should be performed as an anonymous user.
+        :returns: Python object containing returned data
+        """
+
+        r = self.request(
+            method="content.answer",
+            data={
+                "content": content,
+                "type": "s_answer", 
+                "anonymous": "stud" if anon else "no",
+                "revision": revision,  
+                "cid": cid
+                }
+            )
+
+        return self._handle_error(r, "Could not update answer {}.".format(cid))
+
     def content_mark_duplicate(self, params):
         """Mark a post as duplicate to another.
 
