@@ -28,7 +28,7 @@ def _int2base(x, base):
     :type  base: int
     :param base: The base to convert the integer to
     :rtype: str
-    :returns: Dictionary with all data on the post
+    :returns: String representing the number in the new base
     """
     
     if base > len(_exradix_digits):
