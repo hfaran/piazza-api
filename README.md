@@ -65,6 +65,14 @@ cd piazza-api
 python setup.py develop
 ```
 
+```bash
+# The Docker way
+git clone https://github.com/hfaran/piazza-api
+cd piazza-api
+docker build -t piazza-api .
+docker run -it piazza-api:latest
+```
+
 ## Contribute
 
 * [Issue Tracker](https://github.com/hfaran/piazza-api/issues)
