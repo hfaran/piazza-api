@@ -230,7 +230,7 @@ class PiazzaRPC(object):
         """Marks a post as a good note
 
         :type params: dict
-        :param params: the paremters to be passed in
+        :param params: the parameters to be passed in
         """
         r = self.request(
             method="content.add_feedback",
@@ -240,10 +240,10 @@ class PiazzaRPC(object):
             repr(params)))
 
     def content_remove_feedback(self, params):
-        """Unmark a post as a good note
+        """Unmarks a post as a good note
 
         :type params: dict
-        :param params: the paremters to be passed in
+        :param params: the parameters to be passed in
         """
         r = self.request(
             method="content.remove_feedback",
