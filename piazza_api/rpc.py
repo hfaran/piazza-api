@@ -226,6 +226,31 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Could not create object {}.".format(
             repr(params)))
 
+    def content_add_feedback(self, params):
+        """Marks a post as a good note
+
+        :type params: dict
+        :param params: the parameters to be passed in
+        """
+        r = self.request(
+            method="content.add_feedback",
+            data=params
+        )
+        return self._handle_error(r, "Could not create object {}.".format(
+            repr(params)))
+
+    def content_remove_feedback(self, params):
+        """Unmarks a post as a good note
+
+        :type params: dict
+        :param params: the parameters to be passed in
+        """
+        r = self.request(
+            method="content.remove_feedback",
+            data=params
+        )
+        return self._handle_error(r, "Could not create object {}.".format(
+            repr(params)))
 
     def add_students(self, student_emails, nid=None):
         """Enroll students in a network `nid`.

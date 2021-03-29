@@ -358,6 +358,54 @@ class Network(object):
 
         return self._rpc.content_delete(params)
 
+    def add_feedback(self, post):
+        """Marks a post as a good note
+        :type post: dict|str|int
+        :param post: Either the post dict returned by another API method, the post ID, or
+            the `cid` field of that post.
+        :rtype: dict
+        :returns: Status `'OK'` if adding feedback was successful.
+         """
+
+        try:
+         cid = post['id']
+        except KeyError:
+         cid = post
+        except TypeError:
+            post = self.get_post(post)
+            cid = post['id']
+
+        params = {
+            "cid": cid,
+            "type": "tag_good"
+        }
+
+        return self._rpc.content_add_feedback(params)
+
+    def remove_feedback(self, post):
+        """Unmarks a post as a good note
+        :type post: dict|str|int
+        :param post: Either the post dict returned by another API method, the post ID, or
+            the `cid` field of that post.
+        :rtype: dict
+        :returns: Status `'OK'` if removing feedback was successful.
+         """
+
+        try:
+         cid = post['id']
+        except KeyError:
+         cid = post
+        except TypeError:
+            post = self.get_post(post)
+            cid = post['id']
+
+        params = {
+            "cid": cid,
+            "type": "tag_good"
+        }
+
+        return self._rpc.content_remove_feedback(params)
+
     #########
     # Users #
     #########
