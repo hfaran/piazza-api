@@ -33,6 +33,19 @@ class PiazzaRPC(object):
         }
         self.session = requests.Session()
 
+    def get_cookies(self):
+        """Export the session cookie as a dictionary.
+
+        Only works if user_login or demo_login has been completed already.
+        """
+        return self.session.cookies.get_dict()
+
+    def set_cookies(self, cookies):
+        """Import the session cookie from a dictionary.
+        """
+        for name, val in cookies.items():
+            self.session.cookies.set(name, val, domain="piazza.com")
+
     def user_login(self, email=None, password=None):
         """Login with email, password and get back a session cookie
 
