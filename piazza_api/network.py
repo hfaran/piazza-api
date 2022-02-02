@@ -315,12 +315,13 @@ class Network(object):
 
         return self._rpc.content_mark_resolved(params)
 
-    def pin_post(self, post):
-        """Pin post
+    def pin_post(self, post, unpin=False):
+        """Pin/Unpin post
 
         :type  post: dict|str|int
         :param post: Either the post dict returned by another API method, or
             the `cid` field of that post.
+        :param unpin: Whether the post should be unpinned.
         :returns: True if it is successful. False otherwise
         """
         try:
@@ -332,7 +333,7 @@ class Network(object):
             "cid": cid,
         }
 
-        return self._rpc.content_pin(params)
+        return self._rpc.content_pin(params, unpin=unpin)
 
     def delete_post(self, post):
         """ Deletes post by cid
