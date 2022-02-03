@@ -219,14 +219,16 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Could not create object {}.".format(
                                      repr(params)))
 
-    def content_pin(self, params):
-        """Pin a post
+    def content_pin(self, params, unpin=False):
+        """Pin/Unpin a post
 
         :type params: dict
         :param params: the parameters to be passed in
+        :param unpin: Whether the post should be unpinned
         """
+        method = "content.unpin" if unpin else "content.pin"
         r = self.request(
-            method="content.pin",
+            method=method,
             data=params
         )
         return self._handle_error(r, "Could not create object {}.".format(
