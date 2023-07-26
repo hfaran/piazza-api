@@ -1,5 +1,5 @@
 from collections import namedtuple
-
+import time
 from .rpc import PiazzaRPC
 
 
@@ -82,7 +82,7 @@ class Network(object):
         """
         return self._rpc.content_get(cid=cid)
 
-    def iter_all_posts(self, limit=None):
+    def iter_all_posts(self, limit=None, sleep=0):
         """Get all posts visible to the current user
 
         This grabs you current feed and ids of all posts from it; each post
@@ -91,6 +91,8 @@ class Network(object):
         caution to the user when using this.
 
         :type limit: int|None
+        sleep:int -- If given, will allow to actually iterate through all of 
+            Piazza channel's posts without getting kicked or banned by Piazza.
         :param limit: If given, will limit the number of posts to fetch
             before the generator is exhausted and raises StopIteration.
             No special consideration is given to `0`; provide `None` to
@@ -102,6 +104,7 @@ class Network(object):
         feed = self.get_feed(limit=999999, offset=0)
         cids = [post['id'] for post in feed["feed"]]
         if limit is not None:
+            time.sleep(sleep)
             cids = cids[:limit]
         for cid in cids:
             yield self.get_post(cid)
