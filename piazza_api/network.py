@@ -1,5 +1,5 @@
 from collections import namedtuple
-
+import time
 from .rpc import PiazzaRPC
 
 
@@ -104,6 +104,7 @@ class Network(object):
         if limit is not None:
             cids = cids[:limit]
         for cid in cids:
+            time.sleep(1)
             yield self.get_post(cid)
 
     def create_post(self, post_type, post_folders, post_subject, post_content, is_announcement=0, bypass_email=0, anonymous=False):
