@@ -104,9 +104,9 @@ class Network(object):
         feed = self.get_feed(limit=999999, offset=0)
         cids = [post['id'] for post in feed["feed"]]
         if limit is not None:
-            time.sleep(sleep)
             cids = cids[:limit]
         for cid in cids:
+            time.sleep(sleep)
             yield self.get_post(cid)
 
     def create_post(self, post_type, post_folders, post_subject, post_content, is_announcement=0, bypass_email=0, anonymous=False):
