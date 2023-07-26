@@ -93,6 +93,8 @@ class Network(object):
         :type limit: int|None
         sleep:int -- If given, will allow to actually iterate through all of 
             Piazza channel's posts without getting kicked or banned by Piazza.
+            Around 1 second works in practice if you're iterating through
+            a lot of posts.
         :param limit: If given, will limit the number of posts to fetch
             before the generator is exhausted and raises StopIteration.
             No special consideration is given to `0`; provide `None` to
