@@ -93,6 +93,8 @@ class Network(object):
         :type limit: int|None
         sleep:int -- If given, will allow to actually iterate through all of 
             Piazza channel's posts without getting kicked or banned by Piazza.
+            Around 1 second works in practice if you're iterating through
+            a lot of posts.
         :param limit: If given, will limit the number of posts to fetch
             before the generator is exhausted and raises StopIteration.
             No special consideration is given to `0`; provide `None` to
@@ -104,9 +106,9 @@ class Network(object):
         feed = self.get_feed(limit=999999, offset=0)
         cids = [post['id'] for post in feed["feed"]]
         if limit is not None:
-            time.sleep(sleep)
             cids = cids[:limit]
         for cid in cids:
+            time.sleep(sleep)
             yield self.get_post(cid)
 
     def create_post(self, post_type, post_folders, post_subject, post_content, is_announcement=0, bypass_email=0, anonymous=False):
