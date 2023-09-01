@@ -81,8 +81,20 @@ class PiazzaRPC(object):
             data=f'from=%2Fsignup&email={email}&password={password}&remember=on&csrf_token={csrf_token}'
         )
 
+        # If non-successful http response, bail
         if response.status_code != 200:
-            raise AuthenticationError("Could not authenticate.")
+            raise AuthenticationError(f"Could not authenticate.\n{response.text}")
+        
+        # Piazza might give a successful http response even if there is some other
+        # kind of authentication problem. Need to parse the response html for error message
+        pos = response.text.upper().find('VAR ERROR_MSG')
+        errorMsg = None
+        if pos != -1:
+            end = response.text[pos:].find(';')
+            errorMsg = response.text[pos:pos+end].translate({34: None}).split('=')[1].strip()
+
+        if errorMsg is not None:
+            raise AuthenticationError(f"Could not authenticate.\n{errorMsg}")
 
 
     def demo_login(self, auth=None, url=None):
