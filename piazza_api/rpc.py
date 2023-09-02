@@ -60,23 +60,42 @@ class PiazzaRPC(object):
         :type  password: str
         :param password: The password used for authentication
         """
+
+        # Need to get the CSRF token first
+        response = self.session.get('https://piazza.com/main/csrf_token')
+
+        # Make sure a CSRF token was retrieved, otherwise bail
+        if response.text.upper().find('CSRF_TOKEN') == -1:
+            raise AuthenticationError("Could not get CSRF token")
+        
+        # Remove double quotes and semicolon (ASCI 34 & 59) from response string.
+        # Then split the string on "=" to parse out the actual CSRF token
+        csrf_token = response.text.translate({34: None, 59: None}).split("=")[1]
+
         email = six.moves.input("Email: ") if email is None else email
         password = getpass.getpass() if password is None else password
 
-        login_data = {
-            "method": "user.login",
-            "params": {"email": email,
-                       "pass": password}
-        }
-        # If the user/password match, the server respond will contain a
-        #  session cookie that you can use to authenticate future requests.
-        r = self.session.post(
-            self.base_api_urls["logic"],
-            data=json.dumps(login_data),
+        # Log in using credentials and CSRF token and store cookie in session
+        response = self.session.post(
+            'https://piazza.com/class', 
+            data=f'from=%2Fsignup&email={email}&password={password}&remember=on&csrf_token={csrf_token}'
         )
-        if r.json()["result"] not in ["OK"]:
-            raise AuthenticationError("Could not authenticate.\n{}"
-                                      .format(r.json()))
+
+        # If non-successful http response, bail
+        if response.status_code != 200:
+            raise AuthenticationError(f"Could not authenticate.\n{response.text}")
+        
+        # Piazza might give a successful http response even if there is some other
+        # kind of authentication problem. Need to parse the response html for error message
+        pos = response.text.upper().find('VAR ERROR_MSG')
+        errorMsg = None
+        if pos != -1:
+            end = response.text[pos:].find(';')
+            errorMsg = response.text[pos:pos+end].translate({34: None}).split('=')[1].strip()
+
+        if errorMsg is not None:
+            raise AuthenticationError(f"Could not authenticate.\n{errorMsg}")
+
 
     def demo_login(self, auth=None, url=None):
         """Authenticate with a "Share Your Class" URL using a demo user.
