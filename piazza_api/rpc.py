@@ -67,7 +67,7 @@ class PiazzaRPC(object):
         # Make sure a CSRF token was retrieved, otherwise bail
         if response.text.upper().find('CSRF_TOKEN') == -1:
             raise AuthenticationError("Could not get CSRF token")
-        
+
         # Remove double quotes and semicolon (ASCI 34 & 59) from response string.
         # Then split the string on "=" to parse out the actual CSRF token
         csrf_token = response.text.translate({34: None, 59: None}).split("=")[1]
@@ -77,14 +77,14 @@ class PiazzaRPC(object):
 
         # Log in using credentials and CSRF token and store cookie in session
         response = self.session.post(
-            'https://piazza.com/class', 
-            data=f'from=%2Fsignup&email={email}&password={password}&remember=on&csrf_token={csrf_token}'
+            'https://piazza.com/class',
+            data='from=%2Fsignup&email=' + email + '&password=' + password + '&remember=on&csrf_token=' + csrf_token
         )
 
         # If non-successful http response, bail
         if response.status_code != 200:
-            raise AuthenticationError(f"Could not authenticate.\n{response.text}")
-        
+            raise AuthenticationError("Could not authenticate.\n" + response.text)
+
         # Piazza might give a successful http response even if there is some other
         # kind of authentication problem. Need to parse the response html for error message
         pos = response.text.upper().find('VAR ERROR_MSG')
@@ -94,7 +94,7 @@ class PiazzaRPC(object):
             errorMsg = response.text[pos:pos+end].translate({34: None}).split('=')[1].strip()
 
         if errorMsg is not None:
-            raise AuthenticationError(f"Could not authenticate.\n{errorMsg}")
+            raise AuthenticationError("Could not authenticate.\n" + errorMsg)
 
 
     def demo_login(self, auth=None, url=None):
@@ -187,14 +187,14 @@ class PiazzaRPC(object):
 
     def content_student_answer(self, cid, content, revision=1, anon=False):
         """Answer question as student or update existing student answer.
-        
+
         :type cid: str
         :type content: str
         :type revision: int
         :type anon: bool
-        :param cid: The ID of the post to answer.  
-        :param content: The answer content. 
-        :param revision: Revision number. Must be greater than history_size of the student answer. 
+        :param cid: The ID of the post to answer.
+        :param content: The answer content.
+        :param revision: Revision number. Must be greater than history_size of the student answer.
         :param anon: Whether or not this action should be performed as an anonymous user.
         :returns: Python object containing returned data
         """
@@ -203,9 +203,9 @@ class PiazzaRPC(object):
             method="content.answer",
             data={
                 "content": content,
-                "type": "s_answer", 
+                "type": "s_answer",
                 "anonymous": "stud" if anon else "no",
-                "revision": revision,  
+                "revision": revision,
                 "cid": cid
                 }
             )
@@ -251,7 +251,7 @@ class PiazzaRPC(object):
             data=params
         )
         return self._handle_error(r, "Could not create object {}.".format(
-                                     repr(params)))   
+                                     repr(params)))
 
     def content_delete(self, params):
         """Deletes a post.
