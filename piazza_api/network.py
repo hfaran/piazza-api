@@ -152,7 +152,7 @@ class Network(object):
 
         return self._rpc.content_create(params)
 
-    def create_followup(self, post, content, anonymous=False):
+    def create_followup(self, post, content, anonymous=False, instructor=False):
         """Create a follow-up on a post `post`.
 
         It seems like if the post has `<p>` tags, then it's treated as HTML,
@@ -177,11 +177,14 @@ class Network(object):
         params = {
             "cid": cid,
             "type": "followup",
-
+            
             # For followups, the content is actually put into the subject.
             "subject": content,
             "content": "",
-
+            "config": {
+                "editor": "rte",
+                "ionly": True if instructor else False,
+            },
             "anonymous": "yes" if anonymous else "no",
         }
         return self._rpc.content_create(params)
