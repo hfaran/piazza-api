@@ -78,7 +78,7 @@ class PiazzaRPC(object):
         # Log in using credentials and CSRF token and store cookie in session
         response = self.session.post(
             'https://piazza.com/class', 
-            data=f'from=%2Fsignup&email={email}&password={password}&remember=on&csrf_token={csrf_token}'
+            data=r'from=%2Fsignup&email={0}&password={1}&remember=on&csrf_token={2}'.format(email, password, csrf_token)
         )
 
         # If non-successful http response, bail
