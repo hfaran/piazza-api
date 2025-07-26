@@ -111,7 +111,7 @@ class Network(object):
             time.sleep(sleep)
             yield self.get_post(cid)
 
-    def create_post(self, post_type, post_folders, post_subject, post_content, is_announcement=0, bypass_email=0, anonymous=False):
+    def create_post(self, post_type, post_folders, post_subject, post_content, is_announcement=0, bypass_email=0, anonymous=False, is_private=False):
         """Create a post
 
         It seems like if the post has `<p>` tags, then it's treated as HTML,
@@ -132,6 +132,8 @@ class Network(object):
         :param bypass_email:
         :type anonymous: bool
         :param anonymous:
+        :type is_private: bool
+        :param is_private: If True, post will be private to instructors only.
         :rtype: dict
         :returns: Dictionary with information about the created post.
         """
@@ -146,6 +148,12 @@ class Network(object):
                 "is_announcement": is_announcement
             }
         }
+
+        if is_private:
+            user_profile = self._rpc.get_user_profile() or {}
+            user_id = user_profile.get('user_id')
+            if user_id:
+                params["config"]["feed_groups"] = f"instr_{self._nid},{user_id}" 
 
         if bypass_email:
             params["prof_override"] = True
