@@ -111,7 +111,7 @@ class Network(object):
             time.sleep(sleep)
             yield self.get_post(cid)
 
-    def create_post(self, post_type, post_folders, post_subject, post_content, is_announcement=0, bypass_email=0, anonymous=False, is_private=False):
+    def create_post(self, post_type, post_folders, post_subject, post_content, is_announcement=0, bypass_email=0, anonymous=False, is_private=False, scheduled_time=None):
         """Create a post
 
         It seems like if the post has `<p>` tags, then it's treated as HTML,
@@ -134,6 +134,8 @@ class Network(object):
         :param anonymous:
         :type is_private: bool
         :param is_private: If True, post will be private to instructors only.
+        :type scheduled_time: int | None
+        :param scheduled_time: The scheduled time to make post as a Unix millisecond timestamp, or None if not scheduled. Note: Does not support poll posts
         :rtype: dict
         :returns: Dictionary with information about the created post.
         """
@@ -157,6 +159,36 @@ class Network(object):
 
         if bypass_email:
             params["prof_override"] = True
+
+        if scheduled_time is not None:
+
+            if post_type == "poll":
+                raise NotImplementedError("Piazza API currently does not support posting scheduled polls")
+
+            # Create post draft params
+            draft_params = {
+                "draft": {
+                    "content": post_content,
+                    #"selectedPrivateUsers": {}, #TODO: figure out how to set this
+                    "folders": post_folders,
+                    "btn": {
+                        "post_type_note": True if post_type == "note" else False,
+                        "post_type_question": True if post_type == "question" else False,
+                        "schedule_later": True,
+                        "schedule_later_time": scheduled_time
+                    },
+                    "txt": {
+                        "post_summary": post_subject,
+                    },
+                }
+            }
+
+            # Submit the draft and get the id
+            draft_id = self._rpc.save_draft(draft_params)
+
+            params["draftId"] = draft_id
+            params["config"]["schedule_later"] = True
+            params["config"]["schedule_later_time"] = scheduled_time
 
         return self._rpc.content_create(params)
 
