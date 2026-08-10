@@ -477,6 +477,23 @@ class PiazzaRPC(object):
         return self._handle_error(r, "Search with query '{}' failed."
                                   .format(query))
 
+    def save_draft(self, params):
+        """Save a post draft. Needed when scheduling posts.
+
+        :type  params: dict
+        :param params: A dict of options to pass to the endpoint. Depends on
+            the specific type of content being created.
+        :returns: Python object containing returned data
+        """
+        r = self.request(
+            method="network.save_draft",
+            data=params
+        )
+        return self._handle_error(
+            r,
+            "Could not save post draft {}.".format(repr(params))
+        )
+    
     def get_stats(self, nid=None):
         """Get statistics for class
 
