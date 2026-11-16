@@ -9,6 +9,12 @@
 
 4) Ensure the deploy Github Action succeeds, or
 
+The deploy action (`python-publish.yml`) publishes with
+[Trusted Publishing](https://docs.pypi.org/trusted-publishers/) from this repo's `pypi`
+environment, so no PyPI token is stored in GitHub. If the workflow file or the
+environment is renamed, update the publisher in the PyPI project's Settings → Publishing
+first.
+
 ### Manual
 
 4) `git pull` locally
